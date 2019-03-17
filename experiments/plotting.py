@@ -352,10 +352,6 @@ def find_policy_images(base_dir, params):
             }
         else:
             logger.error("Unable to find image file for {} with params {}".format(mdp, mdp_params))
-            print('\n\n\n') # TODO: remove
-            print(fileStart) # TODO: remove
-            print(image_files) # TODO: remove
-            print('\n\n\n') # TODO: remove
 
     return policy_images
 
