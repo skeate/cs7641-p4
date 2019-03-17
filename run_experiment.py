@@ -32,9 +32,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run MDP experiments')
     parser.add_argument('--threads', type=int, default=1, help='Number of threads (defaults to 1, -1 for auto)')
     parser.add_argument('--seed', type=int, help='A random seed to set, if desired')
-    parser.add_argument('--policy', action='store_true', help='Run the policy iteration experiment')
-    parser.add_argument('--value', action='store_true', help='Run the value iteration experiment')
-    parser.add_argument('--q', action='store_true', help='Run the Q-Learner experiment')
+    parser.add_argument('--policy', action='store_true', help='Run the Policy Iteration (PI) experiment')
+    parser.add_argument('--value', action='store_true', help='Run the Value Iteration (VI) experiment')
+    parser.add_argument('--ql', action='store_true', help='Run the Q-Learner experiment')
     parser.add_argument('--all', action='store_true', help='Run all experiments')
     parser.add_argument('--plot', action='store_true', help='Plot data results')
     parser.add_argument('--verbose', action='store_true', help='If true, provide verbose output')
@@ -94,8 +94,8 @@ if __name__ == '__main__':
     if args.value or args.all:
         run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings)
 
-    if args.q or args.all:
-        run_experiment(experiment_details, experiments.QLearnerExperiment, 'Q', verbose, timings)
+    if args.ql or args.all:
+        run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings)
 
     logger.info(timings)
 
