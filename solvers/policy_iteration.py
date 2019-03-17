@@ -6,7 +6,9 @@ from .base import BaseSolver, one_step_lookahead
 
 # Adapted from https://github.com/dennybritz/reinforcement-learning/blob/master/DP/Policy%20Iteration%20Solution.ipynb
 class PolicyIterationSolver(BaseSolver):
+
     def __init__(self, env, discount_factor=0.9, max_policy_eval_steps=None, verbose=False):
+
         self._env = env.unwrapped
 
         self._policy = np.ones([self._env.nS, self._env.nA]) / self._env.nA
@@ -20,6 +22,7 @@ class PolicyIterationSolver(BaseSolver):
         super(PolicyIterationSolver, self).__init__(verbose)
 
     def step(self):
+
         start_time = time.clock()
         # Evaluate the current policy
         V = self.evaluate_policy(self._policy, discount_factor=self._discount_factor,
@@ -62,6 +65,7 @@ class PolicyIterationSolver(BaseSolver):
         return self._policy, V, self._steps, self._step_times[-1], reward, delta, self._policy_stable
 
     def reset(self):
+
         self._policy = np.ones([self._env.nS, self._env.nA]) / self._env.nA
         self._steps = 0
         self._step_times = []
@@ -80,3 +84,4 @@ class PolicyIterationSolver(BaseSolver):
 
     def get_environment(self):
         return self._env
+

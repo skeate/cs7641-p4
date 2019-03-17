@@ -6,8 +6,10 @@ from .base import BaseSolver, one_step_lookahead
 
 # Adapted from https://github.com/dennybritz/reinforcement-learning/blob/master/DP/Value%20Iteration%20Solution.ipynb
 class ValueIterationSolver(BaseSolver):
+
     # Originally 0.0001, not 0.00001
     def __init__(self, env, discount_factor=0.9, theta=0.00001, verbose=False):
+
         self._env = env.unwrapped
 
         self._V = np.zeros(self._env.nS)
@@ -22,6 +24,7 @@ class ValueIterationSolver(BaseSolver):
         super(ValueIterationSolver, self).__init__(verbose)
 
     def step(self):
+
         start_time = time.clock()
 
         delta = 0
@@ -56,6 +59,7 @@ class ValueIterationSolver(BaseSolver):
         return self._policy, self._V, self._steps, self._step_times[-1], reward, delta, self.has_converged()
 
     def reset(self):
+
         self._V = np.zeros(self._env.nS)
         self._policy = np.zeros([self._env.nS, self._env.nA])
         self._steps = 0
@@ -74,3 +78,4 @@ class ValueIterationSolver(BaseSolver):
 
     def get_environment(self):
         return self._env
+

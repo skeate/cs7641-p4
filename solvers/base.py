@@ -5,11 +5,13 @@ import numpy as np
 
 from abc import ABC, abstractmethod
 
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
 class EpisodeStats(object):
+
     def __init__(self, num_episodes):
         self.num_episodes = num_episodes
         self.episode_lengths = np.zeros(num_episodes)
@@ -44,6 +46,7 @@ def one_step_lookahead(env, discount_factor, state, v):
     Returns:
         A vector of length env.nA containing the expected value of each action.
     """
+
     A = np.zeros(env.nA)
     for a in range(env.nA):
         for prob, next_state, reward, done in env.P[state][a]:
@@ -52,6 +55,7 @@ def one_step_lookahead(env, discount_factor, state, v):
 
 
 class BaseSolver(ABC):
+
     def __init__(self, verbose=False):
         self._verbose = verbose
 
@@ -94,6 +98,7 @@ class BaseSolver(ABC):
         Returns:
             Vector of length env.nS representing the value function.
         """
+
         env = self.get_environment()
         # Start with a random (all 0) value function
         V = np.zeros(env.nS)
@@ -123,6 +128,7 @@ class BaseSolver(ABC):
 
     # TODO: Move this elsewhere?
     def render_policy(self, policy):
+
         env = self.get_environment()
         directions = env.directions()
         policy = np.reshape(np.argmax(policy, axis=1), env.desc.shape)
@@ -142,6 +148,7 @@ class BaseSolver(ABC):
         :param render_during: If true, render the env to stdout at each step
         :return: An ndarray of rewards for each step
         """
+
         policy = np.argmax(policy, axis=1)
 
         rewards = []
@@ -173,6 +180,7 @@ class BaseSolver(ABC):
         :param args: The arguments
         :return: None
         """
+
         if self._verbose:
             logger.info(msg.format(*args))
 
