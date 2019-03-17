@@ -145,7 +145,7 @@ print_success()
     # Print success message
     echo -e "\n${BOLD}${BLUE}ML Project 1 environment setup complete${NORMAL}\n"
     echo -e "\t- Use ${BOLD}${BLUE}'source bin/activate'${NORMAL} to start the virtual environment"
-    echo -e "\t- Execute ${BOLD}${BLUE}'python run_experiments.py --all --plot'${NORMAL} from within the virtual environment"
+    echo -e "\t- Execute ${BOLD}${BLUE}'python run_experiments.py --all --plot 2>&1 | tee output.log'${NORMAL} from within the virtual environment"
     echo -e "\t- Use ${BOLD}${BLUE}'deactivate'${NORMAL} to exit the virtual environment when done\n\n"
 }
 
