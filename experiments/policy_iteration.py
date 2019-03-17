@@ -7,6 +7,7 @@ from .base import BaseExperiment, OUTPUT_DIRECTORY
 
 import solvers
 
+
 if not os.path.exists(OUTPUT_DIRECTORY + '/PI'):
     os.makedirs(OUTPUT_DIRECTORY + '/PI')
 if not os.path.exists(OUTPUT_DIRECTORY + '/PI/pkl'):
@@ -16,6 +17,7 @@ if not os.path.exists(OUTPUT_DIRECTORY + '/images/PI'):
 
 
 class PolicyIterationExperiment(BaseExperiment):
+
     def __init__(self, details, verbose=False):
         super(PolicyIterationExperiment, self).__init__(details, verbose)
 
@@ -70,3 +72,4 @@ class PolicyIterationExperiment(BaseExperiment):
                     optimal_policy_stats.reward_std,
                 ))
             runs += 1
+

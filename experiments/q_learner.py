@@ -7,6 +7,7 @@ from .base import BaseExperiment, OUTPUT_DIRECTORY
 
 import solvers
 
+
 if not os.path.exists(OUTPUT_DIRECTORY + '/Q'):
     os.makedirs(OUTPUT_DIRECTORY + '/Q')
 if not os.path.exists(OUTPUT_DIRECTORY + '/Q/pkl'):
@@ -16,6 +17,7 @@ if not os.path.exists(OUTPUT_DIRECTORY + '/images/Q'):
 
 
 class QLearnerExperiment(BaseExperiment):
+
     def __init__(self, details, verbose=False):
         self.max_episodes = 2000
 
@@ -118,3 +120,4 @@ class QLearnerExperiment(BaseExperiment):
                                     optimal_policy_stats.reward_std,
                                 ))
                             runs += 1
+

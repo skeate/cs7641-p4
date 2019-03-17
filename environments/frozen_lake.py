@@ -5,6 +5,7 @@ from gym import utils
 from gym.envs.toy_text import discrete
 from six import StringIO
 
+
 LEFT = 0
 DOWN = 1
 RIGHT = 2
@@ -191,3 +192,4 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
     def new_instance(self):
         return RewardingFrozenLakeEnv(desc=self.desc, rewarding=self.rewarding, step_reward=self.step_reward,
                                       hole_reward=self.hole_reward, is_slippery=self.is_slippery)
+

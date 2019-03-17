@@ -7,6 +7,7 @@ from .base import BaseExperiment, OUTPUT_DIRECTORY
 
 import solvers
 
+
 if not os.path.exists(OUTPUT_DIRECTORY + '/VI'):
     os.makedirs(OUTPUT_DIRECTORY + '/VI')
 if not os.path.exists(OUTPUT_DIRECTORY + '/VI/pkl'):
@@ -16,6 +17,7 @@ if not os.path.exists(OUTPUT_DIRECTORY + '/images/VI'):
 
 
 class ValueIterationExperiment(BaseExperiment):
+
     def __init__(self, details, verbose=False):
         super(ValueIterationExperiment, self).__init__(details, verbose)
 
@@ -70,3 +72,4 @@ class ValueIterationExperiment(BaseExperiment):
                     optimal_policy_stats.reward_std,
                 ))
             runs += 1
+

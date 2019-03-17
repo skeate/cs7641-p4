@@ -46,10 +46,11 @@ the_best = {}
 
 WATERMARK = False
 GATECH_USERNAME = 'DO NOT STEAL'
-TERM = 'Fall 2018'
+TERM = 'Spring 2019'
 
 
 def watermark(p):
+
     if not WATERMARK:
         return p
 
@@ -62,6 +63,7 @@ def watermark(p):
 
 
 def plot_episode_stats(title_base, stats, smoothing_window=50):
+
     # Trim the DF down based on the episode lengths
     stats = stats[stats['length'] > 0]
 
@@ -127,6 +129,7 @@ def plot_episode_stats(title_base, stats, smoothing_window=50):
 
 
 def plot_policy_map(title, policy, map_desc, color_map, direction_map):
+
     fig = plt.figure()
     ax = fig.add_subplot(111, xlim=(0, policy.shape[1]), ylim=(0, policy.shape[0]))
     font_size = 'x-large'
@@ -155,6 +158,7 @@ def plot_policy_map(title, policy, map_desc, color_map, direction_map):
 
 
 def plot_value_map(title, v, map_desc, color_map):
+
     fig = plt.figure()
     ax = fig.add_subplot(111, xlim=(0, v.shape[1]), ylim=(0, v.shape[0]))
     font_size = 'x-large'
@@ -197,6 +201,7 @@ def plot_value_map(title, v, map_desc, color_map):
 
 
 def plot_time_vs_steps(title, df, xlabel="Steps", ylabel="Time (s)"):
+
     plt.close()
     plt.figure()
     plt.title(title)
@@ -212,6 +217,7 @@ def plot_time_vs_steps(title, df, xlabel="Steps", ylabel="Time (s)"):
 
 
 def plot_reward_and_delta_vs_steps(title, df, xlabel="Steps", ylabel="Reward"):
+
     plt.close()
     plt.figure()
 
@@ -241,6 +247,7 @@ def plot_reward_and_delta_vs_steps(title, df, xlabel="Steps", ylabel="Reward"):
 
 # Adapted from http://code.activestate.com/recipes/578293-unicode-command-line-histograms/
 def cli_hist(data, bins=10):
+
     bars = u' ▁▂▃▄▅▆▇█'
     n, bin_edges = np.histogram(data, bins=bins)
     n2 = map(int, np.floor(n*(len(bars)-1)/(max(n))))
@@ -251,6 +258,7 @@ def cli_hist(data, bins=10):
 
 # Adapted from https://gist.github.com/joezuntz/2f3bdc2ab0ea59229907
 def ascii_hist(data, bins=10):
+
     N, X = np.histogram(data, bins=bins)
     total = 1.0 * len(data)
     width = 50
@@ -266,6 +274,7 @@ def ascii_hist(data, bins=10):
 
 
 def fetch_mdp_name(file, regexp):
+
     search_result = regexp.search(basename(file))
     if search_result is None:
         return False, False
@@ -276,6 +285,7 @@ def fetch_mdp_name(file, regexp):
 
 
 def process_params(problem_name, params):
+
     param_str = '{}'.format(params['discount_factor'])
     if problem_name == 'Q':
         param_str = '{}_{}_{}_{}_{}'.format(params['alpha'], params['q_init'], params['epsilon'],
@@ -285,6 +295,7 @@ def process_params(problem_name, params):
 
 
 def find_optimal_params(problem_name, base_dir, file_regex):
+
     grid_files = glob.glob('{}/*_grid*.csv'.format(base_dir))
     logger.info("Grid files {}".format(grid_files))
     best_params = {}
@@ -321,6 +332,7 @@ def find_optimal_params(problem_name, base_dir, file_regex):
 
 
 def find_policy_images(base_dir, params):
+
     policy_images = {}
     for mdp in params:
         mdp_params = params[mdp]
@@ -347,6 +359,7 @@ def find_policy_images(base_dir, params):
 
 
 def find_data_files(base_dir, params):
+
     data_files = {}
     for mdp in params:
         mdp_params = params[mdp]
@@ -367,6 +380,7 @@ def find_data_files(base_dir, params):
 
 
 def copy_best_images(best_images, base_dir):
+
     for problem_name in best_images:
         for mdp in best_images[problem_name]:
             mdp_files = best_images[problem_name][mdp]
@@ -388,6 +402,7 @@ def copy_best_images(best_images, base_dir):
 
 
 def copy_data_files(data_files, base_dir):
+
     for problem_name in data_files:
         for mdp in data_files[problem_name]:
             mdp_files = data_files[problem_name][mdp]
@@ -407,6 +422,7 @@ def copy_data_files(data_files, base_dir):
 
 
 def plot_data(data_files, envs, base_dir):
+
     for problem_name in data_files:
         for mdp in data_files[problem_name]:
             env = lookup_env_from_mdp(envs, mdp)
@@ -458,6 +474,7 @@ def plot_data(data_files, envs, base_dir):
 
 
 def lookup_env_from_mdp(envs, mdp):
+
     for env in envs:
         if env['name'] == mdp:
             return env
@@ -466,6 +483,7 @@ def lookup_env_from_mdp(envs, mdp):
 
 
 def problem_name_to_descriptive_name(problem_name):
+
     if problem_name == 'VI':
         return 'Value Iteration'
     if problem_name == 'PI':
@@ -476,6 +494,7 @@ def problem_name_to_descriptive_name(problem_name):
 
 
 def plot_results(envs):
+
     best_params = {}
     best_images = {}
     data_files = {}
@@ -495,3 +514,4 @@ def plot_results(envs):
     plot_data(data_files, envs, REPORT_PATH)
     params_df = pd.DataFrame(best_params)
     params_df.to_csv('{}/params.csv'.format(REPORT_PATH))
+

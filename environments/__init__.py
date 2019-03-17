@@ -4,6 +4,7 @@ from gym.envs.registration import register
 from .cliff_walking import *
 from .frozen_lake import *
 
+
 __all__ = ['RewardingFrozenLakeEnv', 'WindyCliffWalkingEnv']
 
 register(
@@ -58,3 +59,4 @@ def get_cliff_walking_environment():
 
 def get_windy_cliff_walking_environment():
     return gym.make('WindyCliffWalking-v0')
+

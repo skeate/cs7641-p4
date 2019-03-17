@@ -10,14 +10,16 @@ import experiments
 
 from experiments import plotting
 
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-def run_experiment(experiment_detals, experiment, timing_key, verbose, timings):
+def run_experiment(experiment_details, experiment, timing_key, verbose, timings):
+
     t = datetime.now()
-    for details in experiment_detals:
+    for details in experiment_details:
         logger.info("Running {} experiment: {}".format(timing_key, details.env_readable_name))
         exp = experiment(details, verbose=verbose)
         exp.perform()
@@ -26,6 +28,7 @@ def run_experiment(experiment_detals, experiment, timing_key, verbose, timings):
 
 
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser(description='Run MDP experiments')
     parser.add_argument('--threads', type=int, default=1, help='Number of threads (defaults to 1, -1 for auto)')
     parser.add_argument('--seed', type=int, help='A random seed to set, if desired')
@@ -99,6 +102,6 @@ if __name__ == '__main__':
     if args.plot:
         if verbose:
             logger.info("----------")
-
         logger.info("Plotting results")
         plotting.plot_results(envs)
+

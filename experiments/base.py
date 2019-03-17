@@ -12,6 +12,7 @@ from abc import ABC, abstractmethod
 from .plotting import plot_policy_map, plot_value_map
 import solvers
 
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,7 @@ MAX_STEP_COUNT = 1000
 
 
 class EvaluationStats(object):
+
     def __init__(self):
         self.rewards = list()
         self.stat_history = list()
@@ -77,6 +79,7 @@ class EvaluationStats(object):
 
 
 class ExperimentStats(object):
+
     def __init__(self):
         self.policies = list()
         self.vs = list()
@@ -177,6 +180,7 @@ class ExperimentStats(object):
 
 
 class ExperimentDetails(object):
+
     def __init__(self, env, env_name, env_readable_name, threads, seed):
         self.env = env
         self.env_name = env_name
@@ -186,6 +190,7 @@ class ExperimentDetails(object):
 
 
 class BaseExperiment(ABC):
+
     def __init__(self, details, verbose=False):
         self._details = details
         self._verbose = verbose
@@ -236,3 +241,4 @@ class BaseExperiment(ABC):
         stats.compute()
 
         return stats
+
