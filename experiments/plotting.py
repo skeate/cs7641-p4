@@ -6,6 +6,8 @@ import numpy as np
 import os
 import pandas as pd
 import re
+import matplotlib as mpl
+mpl.use('Agg')
 
 from os.path import basename
 from matplotlib import pyplot as plt
@@ -17,12 +19,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 
-# INPUT_PATH = 'output.final/'
-# OUTPUT_PATH = 'output.final/images/'
-# REPORT_PATH = 'output.final/report/'
-INPUT_PATH = 'output/'
-OUTPUT_PATH = 'output/images/'
-REPORT_PATH = 'output/report/'
+INPUT_PATH = 'output'
+OUTPUT_PATH = os.path.join('output', 'images')
+REPORT_PATH = os.path.join('output', 'report')
 
 if not os.path.exists(REPORT_PATH):
     os.makedirs(REPORT_PATH)
@@ -36,8 +35,8 @@ TO_PROCESS = {
         'path': 'VI',
         'file_regex': re.compile('(.*)_grid\.csv')
     },
-    'Q': {
-        'path': 'Q',
+    'QL': {
+        'path': 'QL',
         'file_regex': re.compile('(.*)_grid\.csv')
     }
 }
@@ -81,9 +80,9 @@ def plot_episode_stats(title_base, stats, smoothing_window=50):
     plt.grid(zorder=0)
     plt.xlabel("Episode Length")
     plt.ylabel("Count")
-    plt.tight_layout()
     plt.title(title_base.format("Episode Length (Histogram)"))
     fig1 = watermark(fig1)
+    plt.tight_layout()
 
     # Plot the episode reward over time
     fig2 = plt.figure(figsize=(10, 5))
@@ -98,13 +97,13 @@ def plot_episode_stats(title_base, stats, smoothing_window=50):
     plt.ylabel("Episode Reward (Smoothed)")
     plt.title("Episode Reward over Time ({})".format(smoothing_window))
     plt.subplot(122)
-    plt.tight_layout()
     plt.hist(stats['reward'], zorder=3)
     plt.grid(zorder=0)
     plt.xlabel("Episode Reward")
     plt.ylabel("Count")
     plt.title(title_base.format("Episode Reward (Histogram)"))
     fig2 = watermark(fig2)
+    plt.tight_layout()
 
     # Plot time steps and episode number
     fig3 = plt.figure(figsize=(10, 5))
@@ -117,13 +116,13 @@ def plot_episode_stats(title_base, stats, smoothing_window=50):
     plt.ylabel("Episode")
     plt.title("Episode per time step")
     plt.subplot(122)
-    plt.tight_layout()
     plt.hist(time_steps, zorder=3)
     plt.grid(zorder=0)
     plt.xlabel("Time Step")
     plt.ylabel("Count")
     plt.title(title_base.format("Episode Time (Histogram)"))
     fig3 = watermark(fig3)
+    plt.tight_layout()
 
     return fig1, fig2, fig3
 
@@ -208,10 +207,9 @@ def plot_time_vs_steps(title, df, xlabel="Steps", ylabel="Time (s)"):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.grid()
-    plt.tight_layout()
-
     plt.plot(df.index.values, df['time'], '-', linewidth=1)
     plt.legend(loc="best")
+    plt.tight_layout()
 
     return watermark(plt)
 
@@ -226,21 +224,20 @@ def plot_reward_and_delta_vs_steps(title, df, xlabel="Steps", ylabel="Reward"):
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
 
-    lns1 = ax.plot(df.index.values, df['reward'], linewidth=1, label=ylabel)
+    lns1 = ax.plot(df.index.values, df['reward'], color='green', linewidth=1, label=ylabel)
 
     ex_ax = ax.twinx()
-    lns2 = ex_ax.plot(df.index.values, df['delta'], linewidth=1, label='Delta')
+    lns2 = ex_ax.plot(df.index.values, df['delta'], color='blue', linewidth=1, label='Delta')
     ex_ax.set_ylabel('Delta')
     ex_ax.tick_params('y')
 
     ax.grid()
     ax.axis('tight')
 
-    f.tight_layout()
-
     lns = lns1 + lns2
     labs = [l.get_label() for l in lns]
     ax.legend(lns, labs, loc=0)
+    f.tight_layout()
 
     return watermark(plt)
 
@@ -287,7 +284,7 @@ def fetch_mdp_name(file, regexp):
 def process_params(problem_name, params):
 
     param_str = '{}'.format(params['discount_factor'])
-    if problem_name == 'Q':
+    if problem_name == 'QL':
         param_str = '{}_{}_{}_{}_{}'.format(params['alpha'], params['q_init'], params['epsilon'],
                                             params['epsilon_decay'], params['discount_factor'])
 
@@ -296,7 +293,7 @@ def process_params(problem_name, params):
 
 def find_optimal_params(problem_name, base_dir, file_regex):
 
-    grid_files = glob.glob('{}/*_grid*.csv'.format(base_dir))
+    grid_files = glob.glob(os.path.join(base_dir, '*_grid*.csv'))
     logger.info("Grid files {}".format(grid_files))
     best_params = {}
     for f in grid_files:
@@ -336,7 +333,8 @@ def find_policy_images(base_dir, params):
     policy_images = {}
     for mdp in params:
         mdp_params = params[mdp]
-        image_files = glob.glob('{}/{}_{}*.png'.format(base_dir, mdp_params['name'], mdp_params['param_str']))
+        fileStart = os.path.join(base_dir, '{}_{}'.format(mdp_params['name'], mdp_params['param_str']))
+        image_files = glob.glob(fileStart + '*.png')
 
         if len(image_files) == 2:
             policy_file = None
@@ -354,6 +352,10 @@ def find_policy_images(base_dir, params):
             }
         else:
             logger.error("Unable to find image file for {} with params {}".format(mdp, mdp_params))
+            print('\n\n\n') # TODO: remove
+            print(fileStart) # TODO: remove
+            print(image_files) # TODO: remove
+            print('\n\n\n') # TODO: remove
 
     return policy_images
 
@@ -363,9 +365,9 @@ def find_data_files(base_dir, params):
     data_files = {}
     for mdp in params:
         mdp_params = params[mdp]
-        files = glob.glob('{}/{}_{}.csv'.format(base_dir, mdp_params['name'], mdp_params['param_str']))
-        optimal_files = glob.glob('{}/{}_{}_optimal.csv'.format(base_dir, mdp_params['name'], mdp_params['param_str']))
-        episode_files = glob.glob('{}/{}_{}_episode.csv'.format(base_dir, mdp_params['name'], mdp_params['param_str']))
+        files = glob.glob(os.path.join(base_dir, '{}_{}.csv'.format(mdp_params['name'], mdp_params['param_str'])))
+        optimal_files = glob.glob(os.path.join(base_dir, '{}_{}_optimal.csv'.format(mdp_params['name'], mdp_params['param_str'])))
+        episode_files = glob.glob(os.path.join(base_dir, '{}_{}_episode.csv'.format(mdp_params['name'], mdp_params['param_str'])))
         logger.info("files {}".format(files))
         logger.info("optimal_files {}".format(optimal_files))
         logger.info("episode_files {}".format(episode_files))
@@ -385,15 +387,15 @@ def copy_best_images(best_images, base_dir):
         for mdp in best_images[problem_name]:
             mdp_files = best_images[problem_name][mdp]
 
-            dest_dir = base_dir + '/' + problem_name
+            dest_dir = os.path.join(base_dir, problem_name)
             policy_image = mdp_files['policy']
             value_image = mdp_files['value']
 
             if not os.path.exists(dest_dir):
                 os.makedirs(dest_dir)
 
-            policy_dest = dest_dir + '/' + basename(policy_image)
-            value_dest = dest_dir + '/' + basename(value_image)
+            policy_dest = os.path.join(dest_dir, basename(policy_image))
+            value_dest = os.path.join(dest_dir, basename(value_image))
             logger.info("Copying {} to {}".format(policy_image, policy_dest))
             logger.info("Copying {} to {}".format(value_image, value_dest))
 
@@ -407,14 +409,14 @@ def copy_data_files(data_files, base_dir):
         for mdp in data_files[problem_name]:
             mdp_files = data_files[problem_name][mdp]
 
-            dest_dir = base_dir + '/' + problem_name
+            dest_dir = os.path.join(base_dir, problem_name)
 
             if not os.path.exists(dest_dir):
                 os.makedirs(dest_dir)
 
             for file_type in mdp_files:
                 file_name = mdp_files[file_type]
-                file_dest = dest_dir + '/' + basename(file_name)
+                file_dest = os.path.join(dest_dir, basename(file_name))
 
                 logger.info("Copying {} file from {} to {}".format(file_type, file_name, file_dest))
 
@@ -433,14 +435,14 @@ def plot_data(data_files, envs, base_dir):
             mdp_files = data_files[problem_name][mdp]
 
             step_term = 'Steps'
-            if problem_name == 'Q':
+            if problem_name == 'QL':
                 step_term = 'Episodes'
 
             df = pd.read_csv(mdp_files['file'])
 
             title = '{}: {} - Time vs {}'.format(env['readable_name'],
                                                  problem_name_to_descriptive_name(problem_name), step_term)
-            file_name = '{}/{}/{}_time.png'.format(base_dir, problem_name, mdp)
+            file_name = os.path.join(os.path.join(base_dir, problem_name), '{}_time.png'.format(mdp))
             p = plot_time_vs_steps(title, df, xlabel=step_term)
             p = watermark(p)
             p.savefig(file_name, format='png', dpi=150)
@@ -453,18 +455,18 @@ def plot_data(data_files, envs, base_dir):
             title = '{}: {} - {} and Delta vs {}'.format(env['readable_name'],
                                                          problem_name_to_descriptive_name(problem_name),
                                                          reward_term, step_term)
-            file_name = '{}/{}/{}_reward_delta.png'.format(base_dir, problem_name, mdp)
+            file_name = os.path.join(os.path.join(base_dir, problem_name), '{}_reward_delta.png'.format(mdp))
             p = plot_reward_and_delta_vs_steps(title, df, ylabel=reward_term, xlabel=step_term)
             p = watermark(p)
             p.savefig(file_name, format='png', dpi=150)
             p.close()
 
-            if problem_name == 'Q' and 'episode_file' in mdp_files:
+            if problem_name == 'QL' and 'episode_file' in mdp_files:
                 title = '{}: {} - {}'.format(env['readable_name'], problem_name_to_descriptive_name(problem_name),
                                              '{}')
                 episode_df = pd.read_csv(mdp_files['episode_file'])
                 q_length, q_reward, q_time = plot_episode_stats(title, episode_df)
-                file_base = '{}/{}/{}_{}.png'.format(base_dir, problem_name, mdp, '{}')
+                file_base = os.path.join(os.path.join(base_dir, problem_name), '{}_{}.png'.format(mdp, '{}'))
 
                 logger.info("Plotting episode stats with file base {}".format(file_base))
                 q_length.savefig(file_base.format('episode_length'), format='png', dpi=150)
@@ -488,7 +490,7 @@ def problem_name_to_descriptive_name(problem_name):
         return 'Value Iteration'
     if problem_name == 'PI':
         return 'Policy Iteration'
-    if problem_name == 'Q':
+    if problem_name == 'QL':
         return "Q-Learner"
     return 'Unknown'
 
@@ -502,8 +504,8 @@ def plot_results(envs):
         logger.info("Processing {}".format(problem_name))
 
         problem = TO_PROCESS[problem_name]
-        problem_path = '{}/{}'.format(INPUT_PATH, problem['path'])
-        problem_image_path = '{}/images/{}'.format(INPUT_PATH, problem['path'])
+        problem_path = os.path.join(INPUT_PATH, problem['path'])
+        problem_image_path = os.path.join(os.path.join(INPUT_PATH, 'images'), problem['path'])
 
         best_params[problem_name] = find_optimal_params(problem_name, problem_path, problem['file_regex'])
         best_images[problem_name] = find_policy_images(problem_image_path, best_params[problem_name])
@@ -513,5 +515,5 @@ def plot_results(envs):
     copy_data_files(data_files, REPORT_PATH)
     plot_data(data_files, envs, REPORT_PATH)
     params_df = pd.DataFrame(best_params)
-    params_df.to_csv('{}/params.csv'.format(REPORT_PATH))
+    params_df.to_csv(os.path.join(REPORT_PATH, 'params.csv'))
 
