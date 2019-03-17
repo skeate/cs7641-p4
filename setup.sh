@@ -146,9 +146,6 @@ print_success()
     echo -e "\n${BOLD}${BLUE}ML Project 1 environment setup complete${NORMAL}\n"
     echo -e "\t- Use ${BOLD}${BLUE}'source bin/activate'${NORMAL} to start the virtual environment"
     echo -e "\t- Execute ${BOLD}${BLUE}'python run_experiments.py --all --plot'${NORMAL} from within the virtual environment"
-    echo -e "\t- Use the outputs to determine dimensions for each experiment; update ${BOLD}${BLUE}'./run_clustering.sh'${NORMAL}"
-    echo -e "\t- Execute ${BOLD}${BLUE}'./run_clustering.sh'${NORMAL} from within the virtual environment"
-    echo -e "\t- Execute ${BOLD}${BLUE}'python run_experiments.py --plot'${NORMAL} from within the virtual environment"
     echo -e "\t- Use ${BOLD}${BLUE}'deactivate'${NORMAL} to exit the virtual environment when done\n\n"
 }
 
