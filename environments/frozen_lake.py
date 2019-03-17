@@ -86,6 +86,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
     metadata = {'render.modes': ['human', 'ansi']}
 
     def __init__(self, desc=None, map_name="4x4", rewarding=True, step_reward=-0.1, hole_reward=-1, is_slippery=True):
+
         if desc is None and map_name is None:
             raise ValueError('Must provide either desc or map_name')
         elif desc is None:
@@ -110,6 +111,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
             return row * ncol + col
 
         def inc(row, col, a):
+
             if a == 0:  # left
                 col = max(col - 1, 0)
             elif a == 1:  # down
@@ -158,6 +160,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
         super(RewardingFrozenLakeEnv, self).__init__(nS, nA, P, isd)
 
     def render(self, mode='human'):
+
         outfile = StringIO() if mode == 'ansi' else sys.stdout
 
         row, col = self.s // self.ncol, self.s % self.ncol
@@ -174,6 +177,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
             return outfile
 
     def colors(self):
+
         return {
             b'S': 'green',
             b'F': 'skyblue',
@@ -182,6 +186,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
         }
 
     def directions(self):
+
         return {
             3: '⬆',
             2: '➡',

@@ -4,6 +4,7 @@ from gym import utils
 from gym.envs.toy_text import discrete
 from six import StringIO
 
+
 UP = 0
 RIGHT = 1
 DOWN = 2
@@ -33,9 +34,11 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
     Each time step incurs -1 reward, and stepping into the cliff incurs -100 reward
     and a reset to the start. An episode terminates when the agent reaches the goal  (earning 100 pts in the process).
     """
+
     metadata = {'render.modes': ['human', 'ansi']}
 
     def __init__(self, wind_prob=0.1):
+
         self.shape = (4, 12)
         self.start_state_index = np.ravel_multi_index((3, 0), self.shape)
         self.wind_prob = wind_prob
@@ -83,6 +86,7 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         :param coord:
         :return:
         """
+
         coord[0] = min(coord[0], self.shape[0] - 1)
         coord[0] = max(coord[0], 0)
         coord[1] = min(coord[1], self.shape[1] - 1)
@@ -96,6 +100,7 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         :param delta: Change in position for transition
         :return: (1.0, new_state, reward, done)
         """
+
         # # IF the wind is blowing, move the agent down
         # wind_blows = np.random.uniform(0.0, 1.0) <= self.wind_prob
         # if wind_blows:
@@ -116,6 +121,7 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         return [(1.0, new_state, -1, is_done)]
 
     def render(self, mode='human'):
+
         outfile = StringIO() if mode == 'ansi' else sys.stdout
 
         row, col = self.s // 12, self.s % 4
@@ -132,6 +138,7 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
             return outfile
 
     def colors(self):
+
         return {
             b'S': 'green',
             b'R': 'lightslategray',
@@ -140,6 +147,7 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         }
 
     def directions(self):
+
         return {
             0: '⬆',
             1: '➡',
