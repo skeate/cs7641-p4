@@ -17,12 +17,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 # TODO: Move this to a common lib?
-OUTPUT_DIRECTORY = './output'
+OUTPUT_DIR = 'output'
 
-if not os.path.exists(OUTPUT_DIRECTORY):
-    os.makedirs(OUTPUT_DIRECTORY)
-if not os.path.exists('{}/images'.format(OUTPUT_DIRECTORY)):
-    os.makedirs('{}/images'.format(OUTPUT_DIRECTORY))
+if not os.path.exists(os.path.join(os.getcwd(), OUTPUT_DIR)):
+    os.makedirs(os.path.join(os.getcwd(), OUTPUT_DIR))
+if not os.path.exists(os.path.join(os.path.join(os.getcwd(), OUTPUT_DIR), 'images')):
+    os.makedirs(os.path.join(os.path.join(os.getcwd(), OUTPUT_DIR), 'images'))
 
 MAX_STEP_COUNT = 1000
 
