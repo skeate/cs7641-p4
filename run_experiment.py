@@ -31,7 +31,7 @@ def run_experiment(experiment_details, experiment, timing_key, verbose, timings)
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Run MDP experiments')
-    parser.add_argument('--threads', type=int, default=1, help='Number of threads (defaults to 1, -1 for auto)')
+    parser.add_argument('--threads', type=int, default=-1, help='Number of threads (defaults to -1 for auto)')
     parser.add_argument('--seed', type=int, help='A random seed to set, if desired')
     parser.add_argument('--policy', action='store_true', help='Run the Policy Iteration (PI) experiment')
     parser.add_argument('--value', action='store_true', help='Run the Value Iteration (VI) experiment')
