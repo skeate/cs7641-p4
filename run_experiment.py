@@ -18,13 +18,14 @@ logger = logging.getLogger(__name__)
 
 def run_experiment(experiment_details, experiment, timing_key, verbose, timings):
 
-    t = datetime.now()
+    timings[timing_key] = {}
     for details in experiment_details:
+        t = datetime.now()
         logger.info("Running {} experiment: {}".format(timing_key, details.env_readable_name))
         exp = experiment(details, verbose=verbose)
         exp.perform()
-    t_d = datetime.now() - t
-    timings[timing_key] = t_d.seconds
+        t_d = datetime.now() - t
+        timings[timing_key][details.env_name] = t_d.seconds
 
 
 if __name__ == '__main__':
@@ -97,11 +98,11 @@ if __name__ == '__main__':
     if args.ql or args.all:
         run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings)
 
-    logger.info(timings)
-
     if args.plot:
         if verbose:
             logger.info("----------")
         logger.info("Plotting results")
         plotting.plot_results(envs)
+
+    logger.info(timings)
 
