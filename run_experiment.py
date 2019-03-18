@@ -35,7 +35,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, help='A random seed to set, if desired')
     parser.add_argument('--policy', action='store_true', help='Run the Policy Iteration (PI) experiment')
     parser.add_argument('--value', action='store_true', help='Run the Value Iteration (VI) experiment')
-    parser.add_argument('--ql', action='store_true', help='Run the Q-Learner experiment')
+    parser.add_argument('--ql', action='store_true', help='Run the Q-Learner (QL) experiment')
     parser.add_argument('--all', action='store_true', help='Run all experiments')
     parser.add_argument('--plot', action='store_true', help='Plot data results')
     parser.add_argument('--verbose', action='store_true', help='If true, provide verbose output')
