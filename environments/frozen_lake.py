@@ -179,10 +179,10 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
     def colors(self):
 
         return {
-            b'S': 'green',
+            b'S': 'black',
             b'F': 'skyblue',
-            b'H': 'black',
-            b'G': 'gold',
+            b'H': 'darkred',
+            b'G': 'green',
         }
 
     def directions(self):
