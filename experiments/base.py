@@ -24,7 +24,7 @@ if not os.path.exists(os.path.join(os.getcwd(), OUTPUT_DIR)):
 if not os.path.exists(os.path.join(os.path.join(os.getcwd(), OUTPUT_DIR), 'images')):
     os.makedirs(os.path.join(os.path.join(os.getcwd(), OUTPUT_DIR), 'images'))
 
-MAX_STEP_COUNT = 1000
+MAX_STEP_COUNT = 2000
 
 
 class EvaluationStats(object):
