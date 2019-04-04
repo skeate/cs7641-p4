@@ -85,26 +85,31 @@ if __name__ == '__main__':
 
     if verbose:
         logger.info("----------")
+    print('\n\n')
     logger.info("Running experiments")
 
     timings = {}
 
     if args.policy or args.all:
+        print('\n\n')
         run_experiment(experiment_details, experiments.PolicyIterationExperiment, 'PI', verbose, timings)
 
     if args.value or args.all:
+        print('\n\n')
         run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings)
 
     if args.ql or args.all:
+        print('\n\n')
         run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings)
 
     if args.plot:
+        print('\n\n')
         if verbose:
             logger.info("----------")
         logger.info("Plotting results")
         plotting.plot_results(envs)
 
-    print('')
+    print('\n\n')
     logger.info(timings)
-    print('')
+    print('\n\n')
 
