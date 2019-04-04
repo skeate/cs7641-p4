@@ -1,5 +1,4 @@
 import sys
-
 import numpy as np
 from gym import utils
 from gym.envs.toy_text import discrete
