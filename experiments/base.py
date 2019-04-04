@@ -219,15 +219,13 @@ class BaseExperiment(ABC):
 
         while not convergence_check_fn(solver, step_count) and step_count < MAX_STEP_COUNT:
             policy, v, steps, step_time, reward, delta, converged = solver.step()
-            # print('{} {}'.format(reward, best_reward))
             if reward > best_reward:
                 best_reward = reward
                 optimal_policy = policy
 
             stats.add(policy, v, steps, step_time, reward, delta, converged)
-            # if self._verbose:
-            #     self.log("Step {}: delta={}, converged={}".format(step_count, delta, converged))
             step_count += 1
+        self.log('Steps: {} delta: {} converged: {}'.format(step_count, delta, converged))
 
         stats.elapsed_time = time.clock() - t
         stats.optimal_policy = stats.policies[-1]  # optimal_policy
