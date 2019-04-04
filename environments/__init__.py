@@ -8,7 +8,7 @@ from .frozen_lake import *
 __all__ = ['RewardingFrozenLakeEnv', 'WindyCliffWalkingEnv']
 
 register(
-    id='RewardingFrozenLake-v0',
+    id='RewardingFrozenLake4x4-v0',
     entry_point='environments:RewardingFrozenLakeEnv',
     kwargs={'map_name': '4x4'},
 )
