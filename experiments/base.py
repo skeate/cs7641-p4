@@ -24,8 +24,6 @@ if not os.path.exists(os.path.join(os.getcwd(), OUTPUT_DIR)):
 if not os.path.exists(os.path.join(os.path.join(os.getcwd(), OUTPUT_DIR), 'images')):
     os.makedirs(os.path.join(os.path.join(os.getcwd(), OUTPUT_DIR), 'images'))
 
-MAX_STEP_COUNT = 2000
-
 
 class EvaluationStats(object):
 
@@ -191,9 +189,10 @@ class ExperimentDetails(object):
 
 class BaseExperiment(ABC):
 
-    def __init__(self, details, verbose=False):
+    def __init__(self, details, verbose=False, max_steps = 2000):
         self._details = details
         self._verbose = verbose
+        self._max_steps = max_steps
 
     @abstractmethod
     def perform(self):
@@ -217,7 +216,7 @@ class BaseExperiment(ABC):
         optimal_policy = None
         best_reward = float('-inf')
 
-        while not convergence_check_fn(solver, step_count) and step_count < MAX_STEP_COUNT:
+        while not convergence_check_fn(solver, step_count) and step_count < self._max_steps:
             policy, v, steps, step_time, reward, delta, converged = solver.step()
             if reward > best_reward:
                 best_reward = reward

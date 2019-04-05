@@ -21,8 +21,8 @@ if not os.path.exists(IMG_DIR):
 
 class QLearnerExperiment(BaseExperiment):
 
-    def __init__(self, details, verbose=False):
-        self.max_episodes = 2000
+    def __init__(self, details, verbose=False, max_steps = 2000, max_episodes = 2000):
+        self._max_episodes = max_episodes
 
         super(QLearnerExperiment, self).__init__(details, verbose)
 
@@ -58,7 +58,7 @@ class QLearnerExperiment(BaseExperiment):
                                 runs, dims, alpha, q_init, epsilon, epsilon_decay, discount_factor
                             ))
 
-                            qs = solvers.QLearningSolver(self._details.env, self.max_episodes,
+                            qs = solvers.QLearningSolver(self._details.env, self._max_episodes,
                                                          discount_factor = discount_factor,
                                                          alpha = alpha,
                                                          epsilon = epsilon, epsilon_decay = epsilon_decay,
@@ -71,13 +71,13 @@ class QLearnerExperiment(BaseExperiment):
                                                       alpha, q_init, epsilon, epsilon_decay, discount_factor)))
                             stats.pickle_results(os.path.join(PKL_DIR, '{}_{}_{}_{}_{}_{}_{}.pkl'.format(self._details.env_name,
                                                  alpha, q_init, epsilon, epsilon_decay, discount_factor, '{}')), map_desc.shape,
-                                                 step_size = self.max_episodes / 20.0)
+                                                 step_size = self._max_episodes / 20.0)
                             stats.plot_policies_on_map(os.path.join(IMG_DIR, '{}_{}_{}_{}_{}_{}_{}.png'.format(self._details.env_name,
                                                        alpha, q_init, epsilon, epsilon_decay, discount_factor, '{}_{}')),
                                                        map_desc, self._details.env.colors(),
                                                        self._details.env.directions(),
                                                        'Q-Learner', 'Episode', self._details,
-                                                       step_size = self.max_episodes / 20.0,
+                                                       step_size = self._max_episodes / 20.0,
                                                        only_last = True)
 
                             # We have extra stats about the episode we might want to look at later

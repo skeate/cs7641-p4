@@ -16,13 +16,27 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 
-def run_experiment(experiment_details, experiment, timing_key, verbose, timings):
+# Configure max steps per experiment
+MAX_STEPS = {
+             'pi': 1000,
+             'vi': 1000,
+             'ql': 20000,
+            }
+
+# Configure max episodes for q-learning
+QL_MAX_EPISODES = 20000
+
+
+def run_experiment(experiment_details, experiment, timing_key, verbose, timings, max_steps, max_episodes = None):
 
     timings[timing_key] = {}
     for details in experiment_details:
         t = datetime.now()
         logger.info("Running {} experiment: {}".format(timing_key, details.env_readable_name))
-        exp = experiment(details, verbose=verbose)
+        if max_episodes is None:
+            exp = experiment(details, verbose=verbose, max_steps=max_steps)
+        else:
+            exp = experiment(details, verbose=verbose, max_steps=max_steps, max_episodes=max_episodes)
         exp.perform()
         t_d = datetime.now() - t
         timings[timing_key][details.env_name] = t_d.seconds
@@ -92,15 +106,15 @@ if __name__ == '__main__':
 
     if args.policy or args.all:
         print('\n\n')
-        run_experiment(experiment_details, experiments.PolicyIterationExperiment, 'PI', verbose, timings)
+        run_experiment(experiment_details, experiments.PolicyIterationExperiment, 'PI', verbose, timings, MAX_STEPS['pi'])
 
     if args.value or args.all:
         print('\n\n')
-        run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings)
+        run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings, MAX_STEPS['vi'])
 
     if args.ql or args.all:
         print('\n\n')
-        run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings)
+        run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings, MAX_STEPS['ql'], QL_MAX_EPISODES)
 
     if args.plot:
         print('\n\n')
