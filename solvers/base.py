@@ -6,6 +6,10 @@ import numpy as np
 from abc import ABC, abstractmethod
 
 
+# Constants
+MAX_STEPS = 2000 # Default unless provided by caller
+
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -139,7 +143,7 @@ class BaseSolver(ABC):
             print("")
 
     # TODO: Move this elsewhere?
-    def run_policy(self, policy, max_steps=1000, render_during=False):
+    def run_policy(self, policy, max_steps=MAX_STEPS, render_during=False):
         """
         Run through the given policy. This will reset the solver's environment before running.
 

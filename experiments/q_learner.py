@@ -8,6 +8,20 @@ from .base import BaseExperiment, OUTPUT_DIR
 import solvers
 
 
+# Constants
+MAX_STEPS = 2000 # Default unless provided by caller
+NUM_TRIALS = 100 # Default unless provided by caller
+MAX_EPISODES = 2000 # Default unless provided by caller
+ALPHAS = [0.1, 0.5, 0.9]
+Q_INITS = ['random', 0]
+EPSILONS = [0.1, 0.3, 0.5]
+EPS_DECAYS = [0.0001]
+DISCOUNT_MIN = 0
+DISCOUNT_MAX = 0.9
+NUM_DISCOUNTS = 10
+MIN_SUB_THETAS = 5
+
+
 QL_DIR = os.path.join(OUTPUT_DIR, 'QL')
 if not os.path.exists(QL_DIR):
     os.makedirs(QL_DIR)
@@ -21,8 +35,11 @@ if not os.path.exists(IMG_DIR):
 
 class QLearnerExperiment(BaseExperiment):
 
-    def __init__(self, details, verbose=False, max_steps = 2000, max_episodes = 2000):
+    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS),
+                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS:
         self._max_episodes = max_episodes
+        self._num_trials = num_trials
+        self._min_sub_thetas = min_sub_thetas
 
         super(QLearnerExperiment, self).__init__(details, verbose, max_steps)
 
@@ -38,11 +55,11 @@ class QLearnerExperiment(BaseExperiment):
         with open(grid_file_name, 'w') as f:
             f.write("params,time,steps,reward_mean,reward_median,reward_min,reward_max,reward_std\n")
 
-        alphas = [0.1, 0.5, 0.9]
-        q_inits = ['random', 0]
-        epsilons = [0.1, 0.3, 0.5]
-        epsilon_decays = [0.0001]
-        discount_factors = np.round(np.linspace(0, 0.9, num = 10), 2)
+        alphas = ALPHAS
+        q_inits = Q_INITS
+        epsilons = EPSILONS
+        epsilon_decays = EPS_DECAYS
+        discount_factors = np.round(np.linspace(DISCOUNT_MIN, max(DISCOUNT_MIN, DISCOUNT_MAX), num = NUM_DISCOUNTS), 2)
         dims = len(discount_factors) * len(alphas) * len(q_inits) * len(epsilons) * len(epsilon_decays)
         self.log("Searching Q in {} dimensions".format(dims))
 
@@ -62,7 +79,9 @@ class QLearnerExperiment(BaseExperiment):
                                                          discount_factor = discount_factor,
                                                          alpha = alpha,
                                                          epsilon = epsilon, epsilon_decay = epsilon_decay,
-                                                         q_init = q_init, verbose = self._verbose)
+                                                         q_init = q_init,
+                                                         min_consecutive_sub_theta_episodes = self._min_sub_thetas,
+                                                         verbose = self._verbose)
 
                             stats = self.run_solver_and_collect(qs, self.convergence_check_fn)
 
@@ -85,7 +104,7 @@ class QLearnerExperiment(BaseExperiment):
                             episode_stats.to_csv(os.path.join(QL_DIR, '{}_{}_{}_{}_{}_{}_episode.csv'.format(self._details.env_name,
                                                  alpha, q_init, epsilon, epsilon_decay, discount_factor)))
 
-                            optimal_policy_stats = self.run_policy_and_collect(qs, stats.optimal_policy)
+                            optimal_policy_stats = self.run_policy_and_collect(qs, stats.optimal_policy, self._num_trials)
                             self.log('{}'.format(optimal_policy_stats))
                             optimal_policy_stats.to_csv(os.path.join(QL_DIR, '{}_{}_{}_{}_{}_{}_optimal.csv'.format(self._details.env_name,
                                                         alpha, q_init, epsilon, epsilon_decay, discount_factor)))

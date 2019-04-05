@@ -7,6 +7,15 @@ from .base import BaseExperiment, OUTPUT_DIR
 
 import solvers
 
+
+# Constants
+MAX_STEPS = 2000 # Default unless provided by caller
+NUM_TRIALS = 100 # Default unless provided by caller
+DISCOUNT_MIN = 0
+DISCOUNT_MAX = 0.9
+NUM_DISCOUNTS = 10
+
+
 PI_DIR = os.path.join(OUTPUT_DIR, 'PI')
 if not os.path.exists(PI_DIR):
     os.makedirs(PI_DIR)
@@ -20,8 +29,10 @@ if not os.path.exists(IMG_DIR):
 
 class PolicyIterationExperiment(BaseExperiment):
 
-    def __init__(self, details, verbose=False, max_steps = 2000):
+    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS):
         super(PolicyIterationExperiment, self).__init__(details, verbose, max_steps)
+        self._num_trials = num_trials
+        self._max_steps = max_steps
 
     def convergence_check_fn(self, solver, step_count):
         return solver.has_converged()
@@ -35,7 +46,7 @@ class PolicyIterationExperiment(BaseExperiment):
         with open(grid_file_name, 'w') as f:
             f.write("params,time,steps,reward_mean,reward_median,reward_min,reward_max,reward_std\n")
 
-        discount_factors = np.round(np.linspace(0, 0.9, num=10), 2)
+        discount_factors = np.round(np.linspace(DISCOUNT_MIN, max(DISCOUNT_MIN, DISCOUNT_MAX), num = NUM_DISCOUNTS), 2)
         dims = len(discount_factors)
         self.log("Searching PI in {} dimensions".format(dims))
 
@@ -45,7 +56,7 @@ class PolicyIterationExperiment(BaseExperiment):
             self.log("{}/{} Processing PI with discount factor {}".format(runs, dims, discount_factor))
 
             p = solvers.PolicyIterationSolver(self._details.env, discount_factor=discount_factor,
-                                              max_policy_eval_steps=3000, verbose=self._verbose)
+                                              max_policy_eval_steps=self._max_steps, verbose=self._verbose)
 
             stats = self.run_solver_and_collect(p, self.convergence_check_fn)
 
@@ -56,7 +67,7 @@ class PolicyIterationExperiment(BaseExperiment):
                                        map_desc, self._details.env.colors(), self._details.env.directions(),
                                        'Policy Iteration', 'Step', self._details, only_last=True)
 
-            optimal_policy_stats = self.run_policy_and_collect(p, stats.optimal_policy)
+            optimal_policy_stats = self.run_policy_and_collect(p, stats.optimal_policy, self._num_trials)
             self.log('{}'.format(optimal_policy_stats))
             optimal_policy_stats.to_csv(os.path.join(PI_DIR, '{}_{}_optimal.csv'.format(self._details.env_name, discount_factor)))
             with open(grid_file_name, 'a') as f:

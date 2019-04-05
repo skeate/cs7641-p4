@@ -16,8 +16,11 @@ import solvers
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# TODO: Move this to a common lib?
+# Constants
 OUTPUT_DIR = 'output'
+MAX_STEPS = 2000 # Default unless provided by caller
+NUM_TRIALS = 100 # Default unless provided by caller
+
 
 if not os.path.exists(os.path.join(os.getcwd(), OUTPUT_DIR)):
     os.makedirs(os.path.join(os.getcwd(), OUTPUT_DIR))
@@ -189,7 +192,7 @@ class ExperimentDetails(object):
 
 class BaseExperiment(ABC):
 
-    def __init__(self, details, verbose=False, max_steps = 2000):
+    def __init__(self, details, verbose=False, max_steps = MAX_STEPS):
         self._details = details
         self._verbose = verbose
         self._max_steps = max_steps
@@ -230,11 +233,11 @@ class BaseExperiment(ABC):
         stats.optimal_policy = stats.policies[-1]  # optimal_policy
         return stats
 
-    def run_policy_and_collect(self, solver, policy, times=1000):
+    def run_policy_and_collect(self, solver, policy, num_trials=NUM_TRIALS):
         stats = EvaluationStats()
-        for i in range(times):
+        for i in range(num_trials):
             # stats.add(np.sum(solver.run_policy(policy)))
-            stats.add(np.mean(solver.run_policy(policy)))
+            stats.add(np.mean(solver.run_policy(policy, self._max_steps)))
         stats.compute()
 
         return stats
