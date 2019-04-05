@@ -16,15 +16,34 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 
+# Configure rewards per environment
+ENV_REWARDS = {
+               'small_lake': {
+                              'step_rew': -1,
+                              'hole_rew': -100,
+                              'goal_rew': 100,
+                             },
+               'large_lake': {
+                              'step_rew': -1,
+                              'hole_rew': -100,
+                              'goal_rew': 100,
+                             },
+               'cliff_walking': {
+                                 'step_rew': -1,
+                                 'fall_rew': -100,
+                                 'goal_rew': 100,
+                                },
+              }
+
 # Configure max steps per experiment
 MAX_STEPS = {
-             'pi': 1000,
+             'pi': 3000,
              'vi': 1000,
-             'ql': 20000,
+             'ql': 20,
             }
 
-# Configure max episodes for q-learning
-QL_MAX_EPISODES = 20000
+# Configure max episodes for q-learning experiment
+QL_MAX_EPISODES = 10
 
 
 def run_experiment(experiment_details, experiment, timing_key, verbose, timings, max_steps, max_episodes = None):
@@ -69,18 +88,23 @@ if __name__ == '__main__':
 
     envs = [
         {
-            # This is not really a rewarding frozen lake env, but the custom class has extra functionality
-            'env': environments.get_rewarding_frozen_lake_environment(),
+            'env': environments.get_rewarding_frozen_lake_environment(ENV_REWARDS['small_lake']['step_rew'],
+                                                                      ENV_REWARDS['small_lake']['hole_rew'],
+                                                                      ENV_REWARDS['small_lake']['goal_rew']),
             'name': 'frozen_lake',
             'readable_name': 'Frozen Lake (8x8)',
         },
         {
-            'env': environments.get_large_rewarding_frozen_lake_environment(),
+            'env': environments.get_large_rewarding_frozen_lake_environment(ENV_REWARDS['large_lake']['step_rew'],
+                                                                            ENV_REWARDS['large_lake']['hole_rew'],
+                                                                            ENV_REWARDS['large_lake']['goal_rew']),
             'name': 'large_frozen_lake',
             'readable_name': 'Frozen Lake (15x15)',
         },
         {
-            'env': environments.get_windy_cliff_walking_environment(),
+            'env': environments.get_windy_cliff_walking_environment(ENV_REWARDS['cliff_walking']['step_rew'],
+                                                                    ENV_REWARDS['cliff_walking']['fall_rew'],
+                                                                    ENV_REWARDS['cliff_walking']['goal_rew']),
             'name': 'cliff_walking',
             'readable_name': 'Cliff Walking (4x12)',
         }

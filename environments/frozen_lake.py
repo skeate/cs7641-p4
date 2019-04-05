@@ -115,7 +115,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
 
     metadata = {'render.modes': ['human', 'ansi']}
 
-    def __init__(self, desc=None, map_name="4x4", rewarding=True, step_reward=-0.1, hole_reward=-1, is_slippery=True):
+    def __init__(self, desc=None, map_name="4x4", rewarding=True, step_rew=-0.1, hole_rew=-1, goal_rew = 1, is_slippery=True):
 
         if desc is None and map_name is None:
             raise ValueError('Must provide either desc or map_name')
@@ -124,8 +124,9 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
         self.desc = desc = np.asarray(desc, dtype='c')
         self.nrow, self.ncol = nrow, ncol = desc.shape
         self.reward_range = (0, 1)
-        self.step_reward = step_reward
-        self.hole_reward = hole_reward
+        self.step_reward = step_rew
+        self.hole_reward = hole_rew
+        self.goal_reward = goal_rew
         self.rewarding = rewarding
         self.is_slippery = is_slippery
 
@@ -159,7 +160,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
                     li = P[s][a]
                     letter = desc[row, col]
                     if letter in b'GH':
-                        li.append((1.0, s, 0, True))
+                        li.append((self.goal_reward, s, 0, True))
                     else:
                         if is_slippery:
                             for b in [(a - 1) % 4, a, (a + 1) % 4]:
@@ -225,6 +226,6 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
         }
 
     def new_instance(self):
-        return RewardingFrozenLakeEnv(desc=self.desc, rewarding=self.rewarding, step_reward=self.step_reward,
-                                      hole_reward=self.hole_reward, is_slippery=self.is_slippery)
+        return RewardingFrozenLakeEnv(desc=self.desc, rewarding=self.rewarding, step_rew=self.step_reward,
+                                      hole_rew=self.hole_reward, goal_rew=self.goal_reward, is_slippery=self.is_slippery)
 

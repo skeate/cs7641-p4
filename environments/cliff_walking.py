@@ -37,11 +37,14 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
 
     metadata = {'render.modes': ['human', 'ansi']}
 
-    def __init__(self, wind_prob=0.1):
+    def __init__(self, wind_prob=0.1, step_rew=-1, fall_rew=-100, goal_rew=100):
 
         self.shape = (4, 12)
         self.start_state_index = np.ravel_multi_index((3, 0), self.shape)
         self.wind_prob = wind_prob
+        self.step_rew = step_rew
+        self.fall_rew = fall_rew
+        self.goal_rew = goal_rew
 
         self.desc = np.asarray([
             "RRRRRRRRRRRR",
@@ -112,13 +115,13 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         new_position = self._limit_coordinates(new_position).astype(int)
         new_state = np.ravel_multi_index(tuple(new_position), self.shape)
         if self._cliff[tuple(new_position)]:
-            return [(1.0, self.start_state_index, -100, False)]
+            return [(1.0, self.start_state_index, self.fall_rew, False)]
 
         terminal_state = (self.shape[0] - 1, self.shape[1] - 1)
         is_done = tuple(new_position) == terminal_state
         if is_done:
-            return [(1.0, new_state, 100, is_done)]
-        return [(1.0, new_state, -1, is_done)]
+            return [(1.0, new_state, self.goal_rew, is_done)]
+        return [(1.0, new_state, self.step_rew, is_done)]
 
     def render(self, mode='human'):
 
@@ -156,5 +159,5 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         }
 
     def new_instance(self):
-        return WindyCliffWalkingEnv(wind_prob=self.wind_prob)
+        return WindyCliffWalkingEnv(wind_prob=self.wind_prob, step_rew=self.step_rew, fall_rew=self.fall_rew, goal_rew=self.goal_rew)
 
