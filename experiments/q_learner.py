@@ -24,7 +24,7 @@ class QLearnerExperiment(BaseExperiment):
     def __init__(self, details, verbose=False, max_steps = 2000, max_episodes = 2000):
         self._max_episodes = max_episodes
 
-        super(QLearnerExperiment, self).__init__(details, verbose)
+        super(QLearnerExperiment, self).__init__(details, verbose, max_steps)
 
     def convergence_check_fn(self, solver, step_count):
         return solver.has_converged()

@@ -230,7 +230,7 @@ class BaseExperiment(ABC):
         stats.optimal_policy = stats.policies[-1]  # optimal_policy
         return stats
 
-    def run_policy_and_collect(self, solver, policy, times=100):
+    def run_policy_and_collect(self, solver, policy, times=1000):
         stats = EvaluationStats()
         for i in range(times):
             # stats.add(np.sum(solver.run_policy(policy)))

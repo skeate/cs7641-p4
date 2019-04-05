@@ -22,7 +22,7 @@ if not os.path.exists(IMG_DIR):
 class ValueIterationExperiment(BaseExperiment):
 
     def __init__(self, details, verbose=False, max_steps = 2000):
-        super(ValueIterationExperiment, self).__init__(details, verbose)
+        super(ValueIterationExperiment, self).__init__(details, verbose, max_steps)
 
     def convergence_check_fn(self, solver, step_count):
         return solver.has_converged()
