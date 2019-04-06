@@ -103,10 +103,10 @@
 
         * Value Iteration:
 
-            * Frozen Lake:          01m 50s
-            * Large Frozen Lake:    03m 11s
-            * Cliff Walking:        01m 18s
-            * Total:                06m 19s
+            * Frozen Lake:          00m 10s
+            * Large Frozen Lake:    00m 26s
+            * Cliff Walking:        00m 11s
+            * Total:                00m 47s
 
         * Q-Learning:
 
