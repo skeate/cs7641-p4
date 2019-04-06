@@ -37,7 +37,7 @@ ENV_REWARDS = {
 
 # Configure max steps per experiment
 MAX_STEPS = {
-             'pi': 4000,
+             'pi': 10000,
              'vi': 200,
              'ql': 20000,
             }
