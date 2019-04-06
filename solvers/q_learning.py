@@ -49,7 +49,6 @@ class QLearningSolver(BaseSolver):
         for t in range(self._max_steps_per_episode+1):
             # Take a step
             action_probs = self._policy_function(state)
-            # TODO: Which one?
             action = np.random.choice(np.arange(len(action_probs)), p=action_probs)
             next_state, reward, done, _ = self._env.step(action)
 

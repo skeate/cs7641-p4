@@ -16,10 +16,10 @@ import solvers
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Constants
+# Constants (default values unless provided by caller)
 OUTPUT_DIR = 'output'
-MAX_STEPS = 2000 # Default unless provided by caller
-NUM_TRIALS = 100 # Default unless provided by caller
+MAX_STEPS = 2000
+NUM_TRIALS = 100
 
 
 if not os.path.exists(os.path.join(os.getcwd(), OUTPUT_DIR)):

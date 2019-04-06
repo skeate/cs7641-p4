@@ -6,8 +6,8 @@ import numpy as np
 from abc import ABC, abstractmethod
 
 
-# Constants
-MAX_STEPS = 2000 # Default unless provided by caller
+# Constants (default values unless provided by caller)
+MAX_STEPS = 2000
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -87,7 +87,6 @@ class BaseSolver(ABC):
     def get_environment(self):
         pass
 
-    # TODO: Move this?
     # Adapted from https://github.com/dennybritz/reinforcement-learning/blob/master/DP/Policy%20Iteration%20Solution.ipynb
     def evaluate_policy(self, policy, discount_factor=1.0, max_steps=None, theta=0.00001):
         """
@@ -128,7 +127,6 @@ class BaseSolver(ABC):
 
         return np.array(V)
 
-    # TODO: Move this elsewhere?
     def render_policy(self, policy):
 
         env = self.get_environment()
@@ -140,7 +138,6 @@ class BaseSolver(ABC):
                 print(directions[policy[row, col]] + ' ', end="")
             print("")
 
-    # TODO: Move this elsewhere?
     def run_policy(self, policy, max_steps=MAX_STEPS, render_during=False):
         """
         Run through the given policy. This will reset the solver's environment before running.

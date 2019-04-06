@@ -8,10 +8,10 @@ from .base import BaseExperiment, OUTPUT_DIR
 import solvers
 
 
-# Constants
-MAX_STEPS = 2000 # Default unless provided by caller
-NUM_TRIALS = 100 # Default unless provided by caller
-MAX_EPISODES = 2000 # Default unless provided by caller
+# Constants (default values unless provided by caller)
+MAX_STEPS = 2000
+NUM_TRIALS = 100
+MAX_EPISODES = 2000
 ALPHAS = [0.1, 0.5, 0.9]
 Q_INITS = ['random', 0]
 EPSILONS = [0.1, 0.3, 0.5]
