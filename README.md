@@ -88,6 +88,7 @@
         --help        Display the help message and exit
 
 
+# TODO: UPDATE THIS SECTION
 **Test Times**
 
     * The following are the test times using the test environment described above for each dataset/experiment
@@ -119,12 +120,10 @@
         * Total Run Time:   58m 37s
 
 
-# TODO: update this section
 **Citations**
 
     * All code, except as listed below, was adopted from Chad Maron's publicly available CS-7641 repository:
 
-        * https://github.com/cmaron/CS-7641-assignments/tree/master/data
         * https://github.com/cmaron/CS-7641-assignments/tree/master/assignment3
 
     * Chad Maron's code was, in turn, adopted from Jonathan Tay's publicly available CS-7641 repository:
