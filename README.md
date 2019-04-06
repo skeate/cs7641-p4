@@ -126,10 +126,6 @@
 
         * https://github.com/cmaron/CS-7641-assignments/tree/master/assignment3
 
-    * Chad Maron's code was, in turn, adopted from Jonathan Tay's publicly available CS-7641 repository:
-
-        * https://github.com/JonathanTay/CS-7641-assignment-3
-
     * The following code was developed solely by me:
 
         * ./setup.sh
