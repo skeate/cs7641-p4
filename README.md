@@ -69,7 +69,7 @@
 
     2. Use the run_experiment.py script, which dumps all results in the output directory defined for each dataset:
 
-        python run_experiment.py --all --plot
+        python run_experiment.py --all --plot --verbose
 
     3. When completed, if using virtualenv, run:
 
@@ -95,28 +95,28 @@
 
         * Policy Iteration:
 
-            * Frozen Lake:          00m 12s
-            * Large Frozen Lake:    00m 44s
-            * Cliff Walking:        00m 14s
-            * Total:                01m 10s
+            * Frozen Lake:          01m 08s
+            * Large Frozen Lake:    11m 29s
+            * Cliff Walking:        00m 15s
+            * Total:                12m 52s
 
         * Value Iteration:
 
-            * Frozen Lake:          00m 12s
-            * Large Frozen Lake:    00m 44s
-            * Cliff Walking:        00m 13s
-            * Total:                01m 13s
+            * Frozen Lake:          01m 50s
+            * Large Frozen Lake:    03m 11s
+            * Cliff Walking:        01m 18s
+            * Total:                06m 19s
 
         * Q-Learning:
 
-            * Frozen Lake:          10m 53s
-            * Large Frozen Lake:    21m 12s
-            * Cliff Walking:        16m 48s
-            * Total:                48m 53s
+            * Frozen Lake:          14m 21s
+            * Large Frozen Lake:    26m 28s
+            * Cliff Walking:        25m 30s
+            * Total:                56m 19s
 
     * The total run time if all experiments are executed using the test environment described above:
 
-        * Total Run Time:   51m 16s
+        * Total Run Time:   58m 37s
 
 
 # TODO: update this section

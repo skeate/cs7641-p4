@@ -4,11 +4,16 @@ import numpy as np
 from .base import BaseSolver, one_step_lookahead
 
 
+# Constants (default values unless provided by caller)
+DISCOUNT = 0.9
+THETA = 0.0001
+
+
 # Adapted from https://github.com/dennybritz/reinforcement-learning/blob/master/DP/Value%20Iteration%20Solution.ipynb
 class ValueIterationSolver(BaseSolver):
 
     # Originally 0.0001, not 0.00001
-    def __init__(self, env, discount_factor=0.9, theta=0.00001, verbose=False):
+    def __init__(self, env, discount_factor=DISCOUNT, theta=THETA, verbose=False):
 
         self._env = env.unwrapped
 

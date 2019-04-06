@@ -121,9 +121,7 @@ class BaseSolver(ABC):
                 # How much our value function changed (across any states)
                 delta = max(delta, np.abs(v - V[s]))
                 V[s] = v
-            # print('{} {} {}'.format(steps, delta, v))
             steps += 1
-            # print("delta: {}, theta: {}".format(delta, theta))
             # Stop evaluating once our value function change is below a threshold
             if delta < theta:
                 break

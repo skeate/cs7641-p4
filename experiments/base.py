@@ -236,7 +236,6 @@ class BaseExperiment(ABC):
     def run_policy_and_collect(self, solver, policy, num_trials=NUM_TRIALS):
         stats = EvaluationStats()
         for i in range(num_trials):
-            # stats.add(np.sum(solver.run_policy(policy)))
             stats.add(np.mean(solver.run_policy(policy, self._max_steps)))
         stats.compute()
 

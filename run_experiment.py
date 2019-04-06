@@ -37,31 +37,36 @@ ENV_REWARDS = {
 
 # Configure max steps per experiment
 MAX_STEPS = {
-             'pi': 10000,
+             'pi': 4000,
              'vi': 200,
-             'ql': 10000,
+             'ql': 20000,
             }
 
 # Configure trials per experiment
 NUM_TRIALS = {
-             'pi': 10000,
+             'pi': 2000,
              'vi': 100,
-             'ql': 10000,
+             'ql': 20000,
             }
 
-# Configure minimum consecutive sub-theta episodes and max episodes for q-learning experiment
+# Configure thetas for PI and VI experiments
+PI_THETA = 0.00001
+VI_THETA = 0.00001
+
+# Configure minimum consecutive sub-theta episodes and max episodes for QL experiment
 QL_MIN_SUB_THETAS = 5
 QL_MAX_EPISODES = max(MAX_STEPS['ql'], NUM_TRIALS['ql'], 20000)
 
 
-def run_experiment(experiment_details, experiment, timing_key, verbose, timings, max_steps, num_trials, max_episodes = None):
+def run_experiment(experiment_details, experiment, timing_key, verbose, timings, max_steps, num_trials, \
+                   theta = None, max_episodes = None, min_sub_thetas = None):
 
     timings[timing_key] = {}
     for details in experiment_details:
         t = datetime.now()
         logger.info("Running {} experiment: {}".format(timing_key, details.env_readable_name))
         if max_episodes is None:
-            exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials)
+            exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials, theta=theta)
         else:
             exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials,
                              max_episodes=max_episodes, min_sub_thetas=min_sub_thetas)
@@ -140,17 +145,18 @@ if __name__ == '__main__':
     if args.policy or args.all:
         print('\n\n')
         run_experiment(experiment_details, experiments.PolicyIterationExperiment, 'PI', verbose, timings, \
-                       MAX_STEPS['pi'], NUM_TRIALS['pi'])
+                       MAX_STEPS['pi'], NUM_TRIALS['pi'], theta=PI_THETA)
 
     if args.value or args.all:
         print('\n\n')
         run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings, \
-                       MAX_STEPS['vi'], NUM_TRIALS['vi'])
+                       MAX_STEPS['vi'], NUM_TRIALS['vi'], theta=VI_THETA)
 
     if args.ql or args.all:
         print('\n\n')
         run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings, \
-                       MAX_STEPS['ql'], NUM_TRIALS['ql'], QL_MAX_EPISODES, QL_MIN_SUB_THETAS)
+                       MAX_STEPS['ql'], NUM_TRIALS['ql'], max_episodes=QL_MAX_EPISODES, \
+                       min_sub_thetas=QL_MIN_SUB_THETAS)
 
     if args.plot:
         print('\n\n')

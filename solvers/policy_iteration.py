@@ -4,10 +4,15 @@ import numpy as np
 from .base import BaseSolver, one_step_lookahead
 
 
+# Constants (default values unless provided by caller)
+DISCOUNT = 0.9
+THETA = 0.0001
+
+
 # Adapted from https://github.com/dennybritz/reinforcement-learning/blob/master/DP/Policy%20Iteration%20Solution.ipynb
 class PolicyIterationSolver(BaseSolver):
 
-    def __init__(self, env, discount_factor=0.9, max_policy_eval_steps=None, verbose=False):
+    def __init__(self, env, discount_factor=DISCOUNT, max_policy_eval_steps=None, theta=THETA, verbose=False):
 
         self._env = env.unwrapped
 
@@ -18,6 +23,7 @@ class PolicyIterationSolver(BaseSolver):
         self._step_times = []
         self._policy_stable = False
         self._max_policy_eval_steps = max_policy_eval_steps
+        self._theta = theta
 
         super(PolicyIterationSolver, self).__init__(verbose)
 
@@ -26,7 +32,7 @@ class PolicyIterationSolver(BaseSolver):
         start_time = time.clock()
         # Evaluate the current policy
         V = self.evaluate_policy(self._policy, discount_factor=self._discount_factor,
-                                 max_steps=self._max_policy_eval_steps)
+                                 max_steps=self._max_policy_eval_steps, theta=self._theta)
 
         # Will be set to false if we make any changes to the policy
         self._policy_stable = True

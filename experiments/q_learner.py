@@ -35,8 +35,8 @@ if not os.path.exists(IMG_DIR):
 
 class QLearnerExperiment(BaseExperiment):
 
-    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS),
-                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS:
+    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS,
+                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS):
         self._max_episodes = max_episodes
         self._num_trials = num_trials
         self._min_sub_thetas = min_sub_thetas

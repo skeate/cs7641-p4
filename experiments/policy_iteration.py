@@ -8,12 +8,13 @@ from .base import BaseExperiment, OUTPUT_DIR
 import solvers
 
 
-# Constants
-MAX_STEPS = 2000 # Default unless provided by caller
-NUM_TRIALS = 100 # Default unless provided by caller
+# Constants (default values unless provided by caller)
+MAX_STEPS = 2000
+NUM_TRIALS = 100
 DISCOUNT_MIN = 0
 DISCOUNT_MAX = 0.9
 NUM_DISCOUNTS = 10
+THETA = 0.0001
 
 
 PI_DIR = os.path.join(OUTPUT_DIR, 'PI')
@@ -29,10 +30,11 @@ if not os.path.exists(IMG_DIR):
 
 class PolicyIterationExperiment(BaseExperiment):
 
-    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS):
+    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS, theta = THETA):
         super(PolicyIterationExperiment, self).__init__(details, verbose, max_steps)
         self._num_trials = num_trials
         self._max_steps = max_steps
+        self._theta = theta
 
     def convergence_check_fn(self, solver, step_count):
         return solver.has_converged()
@@ -56,7 +58,8 @@ class PolicyIterationExperiment(BaseExperiment):
             self.log("{}/{} Processing PI with discount factor {}".format(runs, dims, discount_factor))
 
             p = solvers.PolicyIterationSolver(self._details.env, discount_factor=discount_factor,
-                                              max_policy_eval_steps=self._max_steps, verbose=self._verbose)
+                                              max_policy_eval_steps=self._max_steps, theta=self._theta,
+                                              verbose=self._verbose)
 
             stats = self.run_solver_and_collect(p, self.convergence_check_fn)
 
