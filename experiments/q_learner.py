@@ -20,6 +20,7 @@ DISCOUNT_MIN = 0
 DISCOUNT_MAX = 0.9
 NUM_DISCOUNTS = 10
 MIN_SUB_THETAS = 5
+THETA = 0.0001
 
 
 QL_DIR = os.path.join(OUTPUT_DIR, 'QL')
@@ -36,10 +37,11 @@ if not os.path.exists(IMG_DIR):
 class QLearnerExperiment(BaseExperiment):
 
     def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS,
-                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS):
+                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS, theta = THETA):
         self._max_episodes = max_episodes
         self._num_trials = num_trials
         self._min_sub_thetas = min_sub_thetas
+        self._theta = theta
 
         super(QLearnerExperiment, self).__init__(details, verbose, max_steps)
 
@@ -81,7 +83,7 @@ class QLearnerExperiment(BaseExperiment):
                                                          epsilon = epsilon, epsilon_decay = epsilon_decay,
                                                          q_init = q_init,
                                                          min_consecutive_sub_theta_episodes = self._min_sub_thetas,
-                                                         verbose = self._verbose)
+                                                         verbose = self._verbose, theta = self._theta)
 
                             stats = self.run_solver_and_collect(qs, self.convergence_check_fn)
 

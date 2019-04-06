@@ -49,9 +49,10 @@ NUM_TRIALS = {
              'ql': 20000,
             }
 
-# Configure thetas for PI and VI experiments
+# Configure thetas per experiment
 PI_THETA = 0.00001
 VI_THETA = 0.00001
+QL_THETA = 0.00001
 
 # Configure minimum consecutive sub-theta episodes and max episodes for QL experiment
 QL_MIN_SUB_THETAS = 5
@@ -69,7 +70,7 @@ def run_experiment(experiment_details, experiment, timing_key, verbose, timings,
             exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials, theta=theta)
         else:
             exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials,
-                             max_episodes=max_episodes, min_sub_thetas=min_sub_thetas)
+                             max_episodes=max_episodes, min_sub_thetas=min_sub_thetas, theta=theta)
         exp.perform()
         t_d = datetime.now() - t
         timings[timing_key][details.env_name] = t_d.seconds
@@ -156,7 +157,7 @@ if __name__ == '__main__':
         print('\n\n')
         run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings, \
                        MAX_STEPS['ql'], NUM_TRIALS['ql'], max_episodes=QL_MAX_EPISODES, \
-                       min_sub_thetas=QL_MIN_SUB_THETAS)
+                       min_sub_thetas=QL_MIN_SUB_THETAS, theta=QL_THETA)
 
     if args.plot:
         print('\n\n')
