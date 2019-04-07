@@ -23,40 +23,40 @@ MAPS = {
         "FFFHFFFF",
         "FFFFFHFF",
         "FFFHFFFF",
-        "FHHFFFHF",
-        "FHFFHFHF",
+        "FHHFFHFF",
+        "FHFFHHFF",
         "FFFHFFFG"
     ],
     "12x12": [
         "SFFFFHFFFFFF",
-        "FFFFFFFFFHFF",
-        "FHFFFFHFFFFF",
-        "FFFFFFFFFHFF",
-        "FFFHHFFFFHFF",
-        "FFFFFFHHHHFF",
-        "HHFHFFFFFHFF",
-        "FFFHFFHFFHFF",
-        "FFFFFFFFFHFF",
-        "FFFHFFHFFHFF",
+        "FFFFFFFFFFFF",
+        "FHFFFFFFFFFF",
+        "FFFFFFFFHFFF",
+        "FFFHFFFFHFFF",
+        "FFFFFFHHHFFF",
+        "HHFHFFFFHFFF",
+        "FFFHFFFFHFFF",
+        "FFFFFFFFFFFF",
+        "FFFHFFFFFFFF",
         "FFHFHFFFFFFF",
-        "FHFFFFFFHHFG"
+        "FHFFFFFHHFFG"
     ],
     "15x15": [
         "SFFFFFHFFFFFFFF",
-        "FFFFFFFFFFFFHFF",
-        "FFHFFFFFHFFFFFF",
-        "FFFFHFFFFFFFHFF",
-        "FFFFFFFFFFFFHFF",
-        "FFFFHFFHFFFFHFF",
-        "FFFFHFFFFFFFHFF",
-        "FFFFFFFFHHHHHFF",
-        "HHHFHFFFFFFFHFF",
-        "FFFFHFFHHFFFHFF",
-        "FFFFFFFFFFFFHFF",
-        "FFFFHFFFHFFFHFF",
+        "FFFFFFFFFFFFFFF",
+        "FFHFFFFFFFFFFFF",
+        "FFFFFFFFFFFHFFF",
+        "FFFFFFFFFFFHFFF",
+        "FFFFHFFFFFFHFFF",
+        "FFFFHFFFFFFHFFF",
+        "FFFFFFFFHHHHFFF",
+        "HHHFHFFFFFFHFFF",
+        "FFFFHFFFFFFHFFF",
+        "FFFFFFFFFFFHFFF",
+        "FFFFHFFFFFFFFFF",
         "FFFFFFFFFFFFFFF",
         "FHFHFHFFFFFFFFF",
-        "FFHFFFFFFFHHHFG"
+        "FFHFFFFFFHHHFFG"
     ],
     "20x20": [
         "SFFFFFFHHHFFFFFFFFFF",
@@ -160,7 +160,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
                     li = P[s][a]
                     letter = desc[row, col]
                     if letter in b'GH':
-                        li.append((1.0, s, self.goal_reward, True))
+                        li.append((1.0, s, self.goal_reward if letter == b'G' else self.hole_reward, True))
                     else:
                         if is_slippery:
                             for b in [(a - 1) % 4, a, (a + 1) % 4]:
