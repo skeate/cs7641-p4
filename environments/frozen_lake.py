@@ -222,10 +222,11 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
     def directions(self):
 
         return {
+            4: '',
             3: '⬆',
             2: '➡',
             1: '⬇',
-            0: '⬅'
+            0: '⬅',
         }
 
     def new_instance(self):
