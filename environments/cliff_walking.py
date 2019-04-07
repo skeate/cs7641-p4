@@ -155,7 +155,8 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
             0: '⬆',
             1: '➡',
             2: '⬇',
-            3: '⬅'
+            3: '⬅',
+            4: '',
         }
 
     def new_instance(self):
