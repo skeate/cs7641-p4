@@ -88,7 +88,7 @@
         --help        Display the help message and exit
 
 
-# TODO: UPDATE THIS SECTION
+# TODO: UPDATE QL run times and total run time
 **Test Times**
 
     * The following are the test times using the test environment described above for each dataset/experiment
@@ -96,17 +96,17 @@
 
         * Policy Iteration:
 
-            * Frozen Lake:          01m 08s
-            * Large Frozen Lake:    11m 29s
-            * Cliff Walking:        00m 15s
-            * Total:                12m 52s
+            * Frozen Lake:          00h 28m 05s
+            * Large Frozen Lake:    01h 02m 31s
+            * Cliff Walking:        00h 09m 41s
+            * Total:                01h 40m 17s
 
         * Value Iteration:
 
-            * Frozen Lake:          00m 10s
-            * Large Frozen Lake:    00m 26s
+            * Frozen Lake:          00m 11s
+            * Large Frozen Lake:    00m 28s
             * Cliff Walking:        00m 11s
-            * Total:                00m 47s
+            * Total:                00m 50s
 
         * Q-Learning:
 
