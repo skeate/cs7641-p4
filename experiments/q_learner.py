@@ -37,11 +37,15 @@ if not os.path.exists(IMG_DIR):
 class QLearnerExperiment(BaseExperiment):
 
     def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS,
-                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS, theta = THETA):
+                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS, theta = THETA,
+                 epsilon_decays = EPS_DECAYS):
         self._max_episodes = max_episodes
         self._num_trials = num_trials
         self._min_sub_thetas = min_sub_thetas
         self._theta = theta
+        if type(epsilon_decays) != list:
+            epsilon_decays = list(epsilon_decays)
+        self._epsilon_decays = epsilon_decays
 
         super(QLearnerExperiment, self).__init__(details, verbose, max_steps)
 
@@ -60,16 +64,15 @@ class QLearnerExperiment(BaseExperiment):
         alphas = ALPHAS
         q_inits = Q_INITS
         epsilons = EPSILONS
-        epsilon_decays = EPS_DECAYS
         discount_factors = np.round(np.linspace(DISCOUNT_MIN, max(DISCOUNT_MIN, DISCOUNT_MAX), num = NUM_DISCOUNTS), 2)
-        dims = len(discount_factors) * len(alphas) * len(q_inits) * len(epsilons) * len(epsilon_decays)
+        dims = len(discount_factors) * len(alphas) * len(q_inits) * len(epsilons) * len(self._epsilon_decays)
         self.log("Searching Q in {} dimensions".format(dims))
 
         runs = 1
         for alpha in alphas:
             for q_init in q_inits:
                 for epsilon in epsilons:
-                    for epsilon_decay in epsilon_decays:
+                    for epsilon_decay in self._epsilon_decays:
                         for discount_factor in discount_factors:
                             t = time.clock()
                             self.log("{}/{} Processing QL with alpha {}, q_init {}, epsilon {}, epsilon_decay {},"
