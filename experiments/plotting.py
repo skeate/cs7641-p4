@@ -132,6 +132,7 @@ def plot_policy_map(title, policy, map_desc, color_map, direction_map):
     fig = plt.figure()
     ax = fig.add_subplot(111, xlim=(0, policy.shape[1]), ylim=(0, policy.shape[0]))
     font_size = 'x-large'
+
     if policy.shape[1] > 16:
         font_size = 'small'
     plt.title(title)
@@ -142,12 +143,12 @@ def plot_policy_map(title, policy, map_desc, color_map, direction_map):
             p = plt.Rectangle([x, y], 1, 1)
             p.set_facecolor(color_map[map_desc[i, j]])
             ax.add_patch(p)
-
+            if map_desc[i, j] == b'H' or map_desc[i, j] == b'G':
+                policy[i, j] = 4
             text = ax.text(x+0.5, y+0.5, direction_map[policy[i, j]], weight='bold', size=font_size,
                            horizontalalignment='center', verticalalignment='center', color='w')
             text.set_path_effects([path_effects.Stroke(linewidth=2, foreground='black'),
                                    path_effects.Normal()])
-
     plt.axis('off')
     plt.xlim((0, policy.shape[1]))
     plt.ylim((0, policy.shape[0]))
