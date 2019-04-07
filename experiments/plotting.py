@@ -143,7 +143,7 @@ def plot_policy_map(title, policy, map_desc, color_map, direction_map):
             p = plt.Rectangle([x, y], 1, 1)
             p.set_facecolor(color_map[map_desc[i, j]])
             ax.add_patch(p)
-            if map_desc[i, j] == b'H' or map_desc[i, j] == b'G':
+            if map_desc[i, j] == b'H' or map_desc[i, j] == b'G' or map_desc[i, j] == b'C':
                 policy[i, j] = 4
             text = ax.text(x+0.5, y+0.5, direction_map[policy[i, j]], weight='bold', size=font_size,
                            horizontalalignment='center', verticalalignment='center', color='w')
