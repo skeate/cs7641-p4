@@ -34,8 +34,8 @@ class PolicyIterationSolver(BaseSolver):
         V = self.evaluate_policy(self._policy, discount_factor=self._discount_factor,
                                  max_steps=self._max_policy_eval_steps, theta=self._theta)
 
-        # Will be set to false if we make any changes to the policy
-        self._policy_stable = True
+        # Set to True if steps > 10, false otherwise; will be set to False if we make any changes to the policy
+        self._policy_stable = self._steps > 10
 
         delta = 0
         reward = 0  # float('-inf')
@@ -52,17 +52,12 @@ class PolicyIterationSolver(BaseSolver):
 
             # Calculate delta across all states seen so far
             delta = max(delta, np.abs(best_action_value - V[s]))
-            # reward = max(reward, best_action_value)
             reward += best_action_value
 
             # Greedily update the policy
             if chosen_a != best_a:
                 self._policy_stable = False
             self._policy[s] = np.eye(self._env.nA)[best_a]
-
-        # If we've gone through a few steps but have not improved, consider us converged
-        if delta > self._last_delta and self._steps > 10:
-            self._policy_stable = True
 
         self._steps += 1
         self._step_times.append(time.clock() - start_time)
