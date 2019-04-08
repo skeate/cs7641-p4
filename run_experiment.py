@@ -39,25 +39,25 @@ ENV_REWARDS = {
 MAX_STEPS = {
              'pi': 10000,
              'vi': 200,
-             'ql': 20000,
+             'ql': 30000,
             }
 
 # Configure trials per experiment
 NUM_TRIALS = {
              'pi': 2000,
              'vi': 100,
-             'ql': 2000,
+             'ql': 1000,
             }
 
 # Configure thetas per experiment
 PI_THETA = 0.00001
 VI_THETA = 0.00001
-QL_THETA = 0.0001
+QL_THETA = 0.001
 
 # Configure minimum consecutive sub-theta episodes and max episodes for QL experiment
-QL_EPSILON_DECAYS = [0.0001]
+QL_EPSILON_DECAYS = [0.00001]
 QL_MIN_SUB_THETAS = 5
-QL_MAX_EPISODES = max(MAX_STEPS['ql'], NUM_TRIALS['ql'], 20000)
+QL_MAX_EPISODES = max(MAX_STEPS['ql'], NUM_TRIALS['ql'], 30000)
 
 
 def run_experiment(experiment_details, experiment, timing_key, verbose, timings, max_steps, num_trials, \
