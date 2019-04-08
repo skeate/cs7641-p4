@@ -159,8 +159,8 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
                 for a in range(4):
                     li = P[s][a]
                     letter = desc[row, col]
-                    if letter in b'GH':
-                        li.append((1.0, s, self.goal_reward if letter == b'G' else self.hole_reward, True))
+                    if letter in b'G':
+                        li.append((1.0, s, self.goal_reward if letter == b'G', True))
                     else:
                         if is_slippery:
                             for b in [(a - 1) % 4, a, (a + 1) % 4]:
