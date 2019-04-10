@@ -170,7 +170,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
                                 done = bytes(newletter) in b'GH'
                                 rew = float(newletter == b'G')
                                 if self.rewarding:
-                                    if newletter == b'FS':
+                                    if newletter in b'FS':
                                         rew = self.step_reward
                                     elif newletter == b'H':
                                         rew = self.hole_reward
@@ -185,7 +185,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
                             done = bytes(newletter) in b'GH'
                             rew = float(newletter == b'G')
                             if self.rewarding:
-                                if newletter == b'FS':
+                                if newletter in b'FS':
                                     rew = self.step_reward
                                 elif newletter == b'H':
                                     rew = self.hole_reward
