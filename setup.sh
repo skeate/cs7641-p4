@@ -5,16 +5,15 @@
 declare -a linuxPackages=("python3-pip=9.0.1-2.3~ubuntu1"
                           "python3-tk=3.6.7-1~18.04"
                           "--user virtualenv")
-declare -a pythonModules=("numpy==1.15.1"
+declare -a pythonModules=("gym==0.12.1"
+                          "numpy==1.15.1"
                           "scipy==1.1.0"
                           "scikit-learn==0.19.2"
                           "pandas==0.23.4"
                           "xlrd==0.9.0"
                           "matplotlib==2.2.3"
                           "seaborn==0.9.0"
-                          "scikit-optimize==0.5.2"
-                          "tables==3.4.4")
-
+                          "scikit-optimize==0.5.2")
 
 # Initialize Constants
 PROJECT_NAME="project3"
