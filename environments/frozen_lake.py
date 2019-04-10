@@ -108,7 +108,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
     G : goal, where the frisbee is located
 
     The episode ends when you reach the goal or fall in a hole.
-    You receive a reward of 1 if you reach the goal, -1 for falling in a hole, and a small negative reward otherwise.
+    There are configurable rewards for reaching the goal, falling in a hole, and simply taking a step.
     The hole and step rewards are configurable when creating an instance of the problem.
 
     """
