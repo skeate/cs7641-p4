@@ -112,7 +112,7 @@ if __name__ == '__main__':
             'readable_name': 'Frozen Lake (8x8)',
         },
         {
-            'env': environments.get_large_rewarding_frozen_lake_20x20_environment(ENV_REWARDS['large_lake']['step_rew'],
+            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_rew'],
                                                                                   ENV_REWARDS['large_lake']['hole_rew'],
                                                                                   ENV_REWARDS['large_lake']['goal_rew']),
             'name': 'large_frozen_lake',
