@@ -110,14 +110,14 @@
 
         * Q-Learning:
 
-            * Frozen Lake:          14m 21s
-            * Large Frozen Lake:    26m 28s
-            * Cliff Walking:        25m 30s
-            * Total:                56m 19s
+            * Frozen Lake:          SEVERAL HOURS
+            * Large Frozen Lake:    SEVERAL HOURS
+            * Cliff Walking:        SEVERAL HOURS
+            * Total:                SEVERAL HOURS
 
     * The total run time if all experiments are executed using the test environment described above:
 
-        * Total Run Time:   58m 37s
+        * Total Run Time:   SEVERAL HOURS
 
 
 **Citations**
