@@ -111,7 +111,7 @@ def get_large_rewarding_frozen_lake_12x12_environment(step_rew = LAKE_STEP_REW, 
     return gym.make('RewardingFrozenLake12x12-v0')
 
 
-def get_large_rewarding_frozen_lake_environment(step_rew = LAKE_STEP_REW, hole_rew = LAKE_HOLE_REW, goal_rew = LAKE_GOAL_REW):
+def get_large_rewarding_frozen_lake_15x15_environment(step_rew = LAKE_STEP_REW, hole_rew = LAKE_HOLE_REW, goal_rew = LAKE_GOAL_REW):
 
     global LAKE_STEP_REW
     global LAKE_HOLE_REW
