@@ -117,7 +117,7 @@
 
     * The total run time if all experiments are executed using the test environment described above:
 
-        * Total Run Time:   SEVERAL HOURS
+        * Total Run Time:   SEVERAL HOURS (~4-5 days with default parameters on my machine)
 
 
 **Citations**
