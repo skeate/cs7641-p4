@@ -12,8 +12,6 @@ import solvers
 MAX_STEPS = 2000
 NUM_TRIALS = 100
 MAX_EPISODES = 2000
-MIN_EPISODES = MAX_EPISODES * 0.05
-MAX_EPISODE_STEPS = 500
 ALPHAS = [0.1, 0.5, 0.9]
 Q_INITS = ['random', 0]
 EPSILONS = [0.1, 0.3, 0.5]
@@ -39,11 +37,9 @@ if not os.path.exists(IMG_DIR):
 class QLearnerExperiment(BaseExperiment):
 
     def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS,
-                 max_episodes = MAX_EPISODES, min_episodes = MIN_EPISODES, max_episode_steps = MAX_EPISODE_STEPS, 
-                 min_sub_thetas = MIN_SUB_THETAS, theta = THETA, epsilon_decays = EPS_DECAYS):
+                 max_episodes = MAX_EPISODES, min_sub_thetas = MIN_SUB_THETAS, theta = THETA,
+                 epsilon_decays = EPS_DECAYS):
         self._max_episodes = max_episodes
-        self._max_episode_steps = max_episode_steps
-        self._min_episodes = min_episodes
         self._num_trials = num_trials
         self._min_sub_thetas = min_sub_thetas
         self._theta = theta
@@ -84,8 +80,7 @@ class QLearnerExperiment(BaseExperiment):
                                 runs, dims, alpha, q_init, epsilon, epsilon_decay, discount_factor
                             ))
 
-                            qs = solvers.QLearningSolver(self._details.env, self._max_episodes, self._min_episodes,
-                                                         max_steps_per_episode = self._max_episode_steps,
+                            qs = solvers.QLearningSolver(self._details.env, self._max_episodes,
                                                          discount_factor = discount_factor,
                                                          alpha = alpha,
                                                          epsilon = epsilon, epsilon_decay = epsilon_decay,
