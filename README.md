@@ -90,33 +90,35 @@
 
 **Test Times**
 
+'QL': {'frozen_lake': 13199, 'large_frozen_lake': 27904, 'cliff_walking': 23836}
+
     * The following are the test times using the test environment described above for each dataset/experiment
       combination executed individually, along with cummulative total times for each dataset:
 
         * Policy Iteration:
 
-            * Frozen Lake:          00h 28m 05s
-            * Large Frozen Lake:    01h 02m 31s
-            * Cliff Walking:        00h 09m 41s
-            * Total:                01h 40m 17s
+            * Frozen Lake:          00h 11m 57s
+            * Large Frozen Lake:    01h 12m 02s
+            * Cliff Walking:        00h 09m 40s
+            * Total:                01h 33m 39s
 
         * Value Iteration:
 
             * Frozen Lake:          00h 00m 11s
-            * Large Frozen Lake:    00h 00m 28s
-            * Cliff Walking:        00h 00m 11s
-            * Total:                00h 00m 50s
+            * Large Frozen Lake:    00h 00m 30s
+            * Cliff Walking:        00h 00m 12s
+            * Total:                00h 00m 53s
 
         * Q-Learning:
 
-            * Frozen Lake:          01h 43m 22s
-            * Large Frozen Lake:    05h 39m 21s
-            * Cliff Walking:        10h 22m 55s
-            * Total:                17h 05m 38s
+            * Frozen Lake:          03h 39m 59s
+            * Large Frozen Lake:    07h 45m 04s
+            * Cliff Walking:        06h 37m 16s
+            * Total:                17h 22m 19s
 
     * The total run time if all experiments are executed using the test environment described above:
 
-        * Total Run Time:   18h 46m 45s
+        * Total Run Time:   18h 56m 51s
 
 
 **Citations**
