@@ -88,7 +88,6 @@
         --help        Display the help message and exit
 
 
-# TODO: UPDATE QL run times and total run time
 **Test Times**
 
     * The following are the test times using the test environment described above for each dataset/experiment
@@ -103,21 +102,21 @@
 
         * Value Iteration:
 
-            * Frozen Lake:          00m 11s
-            * Large Frozen Lake:    00m 28s
-            * Cliff Walking:        00m 11s
-            * Total:                00m 50s
+            * Frozen Lake:          00h 00m 11s
+            * Large Frozen Lake:    00h 00m 28s
+            * Cliff Walking:        00h 00m 11s
+            * Total:                00h 00m 50s
 
         * Q-Learning:
 
-            * Frozen Lake:          SEVERAL HOURS
-            * Large Frozen Lake:    SEVERAL HOURS
-            * Cliff Walking:        SEVERAL HOURS
-            * Total:                SEVERAL HOURS
+            * Frozen Lake:          01h 43m 22s
+            * Large Frozen Lake:    05h 39m 21s
+            * Cliff Walking:        10h 22m 55s
+            * Total:                17h 05m 38s
 
     * The total run time if all experiments are executed using the test environment described above:
 
-        * Total Run Time:   SEVERAL HOURS (~4-5 days with default parameters on my machine)
+        * Total Run Time:   18h 46m 45s
 
 
 **Citations**
