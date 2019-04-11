@@ -13,7 +13,7 @@ class QLearningSolver(BaseSolver):
         self._env = env.unwrapped
 
         self._max_episodes = max_episodes
-        # Require we run for at least 5% of the max number of episodes
+        # Require we run for at least 10% of the max number of episodes
         self._min_episodes = np.floor(max_episodes * 0.1)
         self._max_steps_per_episode = max_steps_per_episode
         self._epsilon = epsilon
