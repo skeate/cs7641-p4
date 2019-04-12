@@ -103,14 +103,37 @@ class BaseSolver(ABC):
         """
 
         env = self.get_environment()
-        # Start with a random (all 0) value function
-        V = np.zeros(env.nS)
+
+        # Get start positions
+        start = 0
+        if 'nrow' in env.__dir__():
+            # Frozen Lake
+            for s in range(env.nS):
+                row = int(s / env.nrow)
+                col = s % env.ncol
+                desc = env.desc[row][col]
+                if desc == b'S':
+                    start = s
+                    break
+        else:
+            # Cliff Walking
+            for s in range(env.nS):
+                position = np.unravel_index(s, env.shape)
+                desc = env.desc[position]
+                if desc == b'S':
+                    start = s
+                    break
+
+        # Get values
+        V = np.zeros(env.nS) # Start with a random (all 0) value function
         steps = 0
         while max_steps is None or steps < max_steps:
             delta = 0
             # For each state, perform a "full backup"
             for s in range(env.nS):
                 v = 0
+                position = 0
+                desc = None
                 if 'nrow' in env.__dir__():
                     # Frozen Lake
                     row = int(s / env.nrow)
@@ -122,17 +145,21 @@ class BaseSolver(ABC):
                     desc = env.desc[position]
                 if desc in b'GH':
                     continue # terminating state...no "next" actions to evaluate
-                # Look at the possible next actions
+                # Look at all possible next actions
                 for a, action_prob in enumerate(policy[s]):
                     # For each action, look at the possible next states...
                     for prob, next_state, reward, done in env.P[s][a]:
                         # Calculate the expected value
+                        if 'nrow' not in env.__dir__() and desc == b'C':
+                            # Cliff Walking cliff position; next state is starting position
+                            v = V[start]
+                            continue
                         v += action_prob * prob * (reward + discount_factor * V[next_state])
-                # How much our value function changed (across any states)
+                # How much the value function changed (across any states)
                 delta = max(delta, np.abs(v - V[s]))
                 V[s] = v
             steps += 1
-            # Stop evaluating once our value function change is below a threshold
+            # Stop evaluating once our value function change is below a threshold (theta)
             if delta < theta:
                 break
 
