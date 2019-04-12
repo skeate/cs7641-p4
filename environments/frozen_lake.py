@@ -234,5 +234,6 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
 
     def new_instance(self):
         return RewardingFrozenLakeEnv(desc=self.desc, rewarding=self.rewarding, step_rew=self.step_reward,
-                                      hole_rew=self.hole_reward, goal_rew=self.goal_reward, is_slippery=self.is_slippery)
+                                      hole_rew=self.hole_reward, goal_rew=self.goal_reward, is_slippery=self.is_slippery,
+                                      step_prob=self.step_prob)
 
