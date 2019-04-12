@@ -30,10 +30,14 @@ if not os.path.exists(IMG_DIR):
 
 class ValueIterationExperiment(BaseExperiment):
 
-    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS, theta = THETA):
+    def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS, theta = THETA,
+                 discounts = [DISCOUNT_MIN, DISCOUNT_MAX, NUM_DISCOUNTS]):
         super(ValueIterationExperiment, self).__init__(details, verbose, max_steps)
         self._num_trials = num_trials
         self._theta = theta
+        self._discount_min = discounts[0]
+        self._discount_max = discounts[1]
+        self._num_discounts = discounts[2]
 
     def convergence_check_fn(self, solver, step_count):
         return solver.has_converged()
@@ -47,7 +51,8 @@ class ValueIterationExperiment(BaseExperiment):
         with open(grid_file_name, 'w') as f:
             f.write("params,time,steps,reward_mean,reward_median,reward_min,reward_max,reward_std\n")
 
-        discount_factors = np.round(np.linspace(DISCOUNT_MIN, max(DISCOUNT_MIN, DISCOUNT_MAX), num = NUM_DISCOUNTS), 2)
+        discount_factors = np.round(np.linspace(self._discount_min, max(self._discount_min, self._discount_max), \
+                                    num = self._num_discounts), 2)
         dims = len(discount_factors)
         self.log("Searching VI in {} dimensions".format(dims))
 

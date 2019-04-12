@@ -11,11 +11,11 @@ from experiments import plotting
 
 # Configure rewards per environment
 ENV_REWARDS = {
-               'small_lake':    { 'step_rew': -1,
+               'small_lake':    { 'step_rew': -.1,
                                   'hole_rew': -100,
                                   'goal_rew': 100,
                                 },
-               'large_lake':    { 'step_rew': -1,
+               'large_lake':    { 'step_rew': -.1,
                                   'hole_rew': -100,
                                   'goal_rew': 100,
                                 },
@@ -34,7 +34,7 @@ MAX_STEPS = { 'pi': 10000,
 # Configure trials per experiment
 NUM_TRIALS = { 'pi': 2000,
                'vi': 100,
-               'ql': 1000,
+               'ql': 2000,
              }
 
 # Configure thetas per experiment
@@ -42,12 +42,16 @@ PI_THETA = 0.00001
 VI_THETA = 0.00001
 QL_THETA = 0.001
 
+# Configure discounts per experiment (format: [min_discount, max_discount, num_discounts])
+PI_DISCOUNTS = [0.0, 0.9, 10]
+VI_DISCOUNTS = [0.0, 0.9, 10]
+QL_DISCOUNTS = [0.0, 0.9, 10]
+
 # Configure other QL experiment parameters
 QL_MAX_EPISODES = max(MAX_STEPS['ql'], NUM_TRIALS['ql'], 30000)
 QL_MIN_EPISODES = QL_MAX_EPISODES * 0.01
-QL_MAX_EPISODE_STEPS = 5000 # maximun steps per episode
+QL_MAX_EPISODE_STEPS = 10000 # maximun steps per episode
 QL_MIN_SUB_THETAS = 5 # num of consecutive episodes with little change before calling it converged
-QL_DISCOUNTS = [0.0, 0.9, 10] # format: [min_discount, max_discount, num_discounts]
 QL_ALPHAS = [0.1, 0.5, 0.9,] # a list of alphas to try
 QL_Q_INITS = ['random', 0,] # a list of q-inits to try
 QL_EPSILONS = [0.1, 0.3, 0.5,] # a list of epsilons to try
@@ -68,13 +72,14 @@ def run_experiment(experiment_details, experiment, timing_key, verbose, timings,
     for details in experiment_details:
         t = datetime.now()
         logger.info("Running {} experiment: {}".format(timing_key, details.env_readable_name))
-        if timing_key == 'QL': # QL
+        if timing_key == 'QL': # Q-Learning
             exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials,
                              max_episodes=max_episodes, min_episodes=min_episodes, max_episode_steps=max_episode_steps,
                              min_sub_thetas=min_sub_thetas, theta=theta, discounts=discounts, alphas=alphas,
                              q_inits=q_inits, epsilons=epsilons, epsilon_decays=epsilon_decays)
-        else: # Not QL
-            exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials, theta=theta)
+        else: # NOT Q-Learning
+            exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials, theta=theta,
+                             discounts=discounts)
         exp.perform()
         t_d = datetime.now() - t
         timings[timing_key][details.env_name] = t_d.seconds
@@ -82,6 +87,7 @@ def run_experiment(experiment_details, experiment, timing_key, verbose, timings,
 
 if __name__ == '__main__':
 
+    # Parse arguments
     parser = argparse.ArgumentParser(description='Run MDP experiments')
     parser.add_argument('--threads', type=int, default=-1, help='Number of threads (defaults to -1 for auto)')
     parser.add_argument('--seed', type=int, help='A random seed to set, if desired')
@@ -95,6 +101,7 @@ if __name__ == '__main__':
     verbose = args.verbose
     threads = args.threads
 
+    # Set random seed
     seed = args.seed
     if seed is None:
         seed = np.random.randint(0, (2 ** 32) - 1)
@@ -105,6 +112,7 @@ if __name__ == '__main__':
     logger.info("Creating MDPs")
     logger.info("----------")
 
+    # Modify this list of dicts to add/remove/swap environments
     envs = [
         {
             'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_rew'],
@@ -129,6 +137,7 @@ if __name__ == '__main__':
         }
     ]
 
+    # Set up experiments
     experiment_details = []
     for env in envs:
         env['env'].seed(seed)
@@ -145,18 +154,21 @@ if __name__ == '__main__':
     print('\n\n')
     logger.info("Running experiments")
 
-    timings = {}
+    timings = {} # Dict used to report experiment times (in seconds) at the end of the run
 
+    # Run Policy Iteration (PI) experiment
     if args.policy or args.all:
         print('\n\n')
         run_experiment(experiment_details, experiments.PolicyIterationExperiment, 'PI', verbose, timings, \
-                       MAX_STEPS['pi'], NUM_TRIALS['pi'], theta=PI_THETA)
+                       MAX_STEPS['pi'], NUM_TRIALS['pi'], theta=PI_THETA, discounts=PI_DISCOUNTS)
 
+    # Run Value Iteration (VI) experiment
     if args.value or args.all:
         print('\n\n')
         run_experiment(experiment_details, experiments.ValueIterationExperiment, 'VI', verbose, timings, \
-                       MAX_STEPS['vi'], NUM_TRIALS['vi'], theta=VI_THETA)
+                       MAX_STEPS['vi'], NUM_TRIALS['vi'], theta=VI_THETA, discounts=VI_DISCOUNTS)
 
+    # Run Q-Learning (QL) experiment
     if args.ql or args.all:
         print('\n\n')
         run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings, MAX_STEPS['ql'], \
@@ -165,6 +177,7 @@ if __name__ == '__main__':
                        discounts=QL_DISCOUNTS, alphas=QL_ALPHAS, q_inits=QL_Q_INITS, epsilons=QL_EPSILONS, \
                        epsilon_decays=QL_EPSILON_DECAYS)
 
+    # Generate plots
     if args.plot:
         print('\n\n')
         if verbose:
@@ -172,6 +185,7 @@ if __name__ == '__main__':
         logger.info("Plotting results")
         plotting.plot_results(envs)
 
+    # Output timing information
     print('\n\n')
     logger.info(timings)
     print('\n\n')
