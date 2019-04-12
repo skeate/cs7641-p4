@@ -140,11 +140,11 @@ def plot_policy_map(title, policy, map_desc, color_map, direction_map):
         for j in range(policy.shape[1]):
             y = policy.shape[0] - i - 1
             x = j
-            p = plt.Rectangle([x, y], 1, 1)
+            p = plt.Rectangle([x, y], 1, 1, edgecolor='k', linewidth=0.1)
             p.set_facecolor(color_map[map_desc[i, j]])
             ax.add_patch(p)
-            if map_desc[i, j] == b'H' or map_desc[i, j] == b'G' or map_desc[i, j] == b'C':
-                policy[i, j] = 4
+            if map_desc[i, j] in b'CHG':
+                continue
             text = ax.text(x+0.5, y+0.5, direction_map[policy[i, j]], weight='bold', size=font_size,
                            horizontalalignment='center', verticalalignment='center', color='w')
             text.set_path_effects([path_effects.Stroke(linewidth=2, foreground='black'),
@@ -171,8 +171,8 @@ def plot_value_map(title, v, map_desc, color_map):
     v_red = np.digitize(v, bins)/100.0
     for i in range(v.shape[0]):
         for j in range(v.shape[1]):
-            value = np.round(v[i, j], 2)
-            if len(str(value)) > 4:
+            value = np.round(v[i, j], 1)
+            if len(str(value)) > 3:
                 font_size = 'small'
 
     plt.title(title)
@@ -180,13 +180,15 @@ def plot_value_map(title, v, map_desc, color_map):
         for j in range(v.shape[1]):
             y = v.shape[0] - i - 1
             x = j
-            p = plt.Rectangle([x, y], 1, 1)
+            p = plt.Rectangle([x, y], 1, 1, edgecolor='k', linewidth=0.1)
             p.set_facecolor(color_map[map_desc[i, j]])
             ax.add_patch(p)
 
-            value = np.round(v[i, j], 2)
+            value = np.round(v[i, j], 1)
 
             red = v_red[i, j]
+            if map_desc[i, j] in b'HG':
+                continue
             text2 = ax.text(x+0.5, y+0.5, value, size=font_size,
                             horizontalalignment='center', verticalalignment='center', color=(1.0, 1.0-red, 1.0-red))
             text2.set_path_effects([path_effects.Stroke(linewidth=1, foreground='black'),

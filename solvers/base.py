@@ -111,6 +111,17 @@ class BaseSolver(ABC):
             # For each state, perform a "full backup"
             for s in range(env.nS):
                 v = 0
+                if 'nrow' in env.__dir__():
+                    # Frozen Lake
+                    row = int(s / env.nrow)
+                    col = s % env.ncol
+                    desc = env.desc[row][col]
+                else:
+                    # Cliff Walking
+                    position = np.unravel_index(s, env.shape)
+                    desc = env.desc[position])
+                if desc in b'GH':
+                    continue # terminating state...no "next" actions to evaluate
                 # Look at the possible next actions
                 for a, action_prob in enumerate(policy[s]):
                     # For each action, look at the possible next states...
