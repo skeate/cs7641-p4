@@ -29,15 +29,15 @@ ENV_REWARDS = {
               }
 
 # Configure max steps per experiment
-MAX_STEPS = { 'pi': 2000, 
+MAX_STEPS = { 'pi': 5000, 
               'vi': 200,
-              'ql': 5000, 
+              'ql': 20000, 
             }
 
 # Configure trials per experiment
-NUM_TRIALS = { 'pi': 500,
+NUM_TRIALS = { 'pi': 1000,
                'vi': 100,
-               'ql': 500,
+               'ql': 1000,
              }
 
 # Configure thetas per experiment
@@ -117,22 +117,22 @@ if __name__ == '__main__':
 
     # Modify this list of dicts to add/remove/swap environments
     envs = [
-#        {
-#            'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
-#                                                                          ENV_REWARDS['small_lake']['step_rew'],
-#                                                                          ENV_REWARDS['small_lake']['hole_rew'],
-#                                                                          ENV_REWARDS['small_lake']['goal_rew']),
-#            'name': 'frozen_lake',
-#            'readable_name': 'Frozen Lake (8x8)',
-#        },
-#        {
-#            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
-#                                                                                  ENV_REWARDS['large_lake']['step_rew'],
-#                                                                                  ENV_REWARDS['large_lake']['hole_rew'],
-#                                                                                  ENV_REWARDS['large_lake']['goal_rew']),
-#            'name': 'large_frozen_lake',
-#            'readable_name': 'Frozen Lake (15x15)',
-#        },
+        {
+            'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
+                                                                          ENV_REWARDS['small_lake']['step_rew'],
+                                                                          ENV_REWARDS['small_lake']['hole_rew'],
+                                                                          ENV_REWARDS['small_lake']['goal_rew']),
+            'name': 'frozen_lake',
+            'readable_name': 'Frozen Lake (8x8)',
+        },
+        {
+            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
+                                                                                  ENV_REWARDS['large_lake']['step_rew'],
+                                                                                  ENV_REWARDS['large_lake']['hole_rew'],
+                                                                                  ENV_REWARDS['large_lake']['goal_rew']),
+            'name': 'large_frozen_lake',
+            'readable_name': 'Frozen Lake (15x15)',
+        },
         {
             'env': environments.get_windy_cliff_walking_4x12_environment(ENV_REWARDS['cliff_walking']['wind_prob'],
                                                                          ENV_REWARDS['cliff_walking']['step_rew'],
