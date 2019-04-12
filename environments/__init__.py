@@ -52,6 +52,11 @@ register(
 )
 
 register(
+    id='RewardingFrozenLakeNoRewards12x12-v0',
+    entry_point='environments:RewardingFrozenLakeEnv',
+)
+
+register(
     id='RewardingFrozenLakeNoRewards15x15-v0',
     entry_point='environments:RewardingFrozenLakeEnv',
 )
