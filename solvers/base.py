@@ -119,7 +119,7 @@ class BaseSolver(ABC):
                 else:
                     # Cliff Walking
                     position = np.unravel_index(s, env.shape)
-                    desc = env.desc[position])
+                    desc = env.desc[position]
                 if desc in b'GH':
                     continue # terminating state...no "next" actions to evaluate
                 # Look at the possible next actions
