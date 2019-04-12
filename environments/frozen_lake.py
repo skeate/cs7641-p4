@@ -130,7 +130,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
         self.goal_reward = goal_rew
         self.rewarding = rewarding
         self.is_slippery = is_slippery
-        self.step_prob = max(step_prob, 1.0)
+        self.step_prob = min(step_prob, 1.0)
         self.slip_prob = (1.0 - self.step_prob) / 2
 
         nA = 4
