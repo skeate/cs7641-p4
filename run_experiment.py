@@ -1,53 +1,41 @@
 import argparse
 from datetime import datetime
 import logging
-
 import random as rand
 import numpy as np
 
 import environments
 import experiments
-
 from experiments import plotting
-
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
 
 # Configure rewards per environment
 ENV_REWARDS = {
-               'small_lake': {
-                              'step_rew': -1,
-                              'hole_rew': -100,
-                              'goal_rew': 100,
-                             },
-               'large_lake': {
-                              'step_rew': -1,
-                              'hole_rew': -100,
-                              'goal_rew': 100,
-                             },
-               'cliff_walking': {
-                                 'step_rew': -1,
-                                 'fall_rew': -100,
-                                 'goal_rew': 100,
+               'small_lake':    { 'step_rew': -1,
+                                  'hole_rew': -100,
+                                  'goal_rew': 100,
+                                },
+               'large_lake':    { 'step_rew': -1,
+                                  'hole_rew': -100,
+                                  'goal_rew': 100,
+                                },
+               'cliff_walking': { 'step_rew': -1,
+                                  'fall_rew': -100,
+                                  'goal_rew': 100,
                                 },
               }
 
 # Configure max steps per experiment
-MAX_STEPS = {
-             'pi': 10000,
-             'vi': 200,
-             'ql': 30000,
+MAX_STEPS = { 'pi': 10000, 
+              'vi': 200,
+              'ql': 30000, 
             }
 
 # Configure trials per experiment
-NUM_TRIALS = {
-             'pi': 2000,
-             'vi': 100,
-             'ql': 1000,
-            }
+NUM_TRIALS = { 'pi': 2000,
+               'vi': 100,
+               'ql': 1000,
+             }
 
 # Configure thetas per experiment
 PI_THETA = 0.00001
@@ -57,13 +45,18 @@ QL_THETA = 0.001
 # Configure other QL experiment parameters
 QL_MAX_EPISODES = max(MAX_STEPS['ql'], NUM_TRIALS['ql'], 30000)
 QL_MIN_EPISODES = QL_MAX_EPISODES * 0.01
-QL_MAX_EPISODE_STEPS = 5000
-QL_MIN_SUB_THETAS = 5 # number of consecutive episodes with little change before calling it converged
-QL_DISCOUNTS = [0.0, 0.9, 10] # format: [min_discount, max_discount, num_discounts] # TODO
-QL_ALPHAS = [0.1, 0.5, 0.9,] # a list of alphas to try # TODO
-QL_Q_INITS = ['random', 0,] # a list of q-inits to try # TODO
-QL_EPSILONS = [0.1, 0.3, 0.5,] # a list of epsilons to try # TODO
+QL_MAX_EPISODE_STEPS = 5000 # maximun steps per episode
+QL_MIN_SUB_THETAS = 5 # num of consecutive episodes with little change before calling it converged
+QL_DISCOUNTS = [0.0, 0.9, 10] # format: [min_discount, max_discount, num_discounts]
+QL_ALPHAS = [0.1, 0.5, 0.9,] # a list of alphas to try
+QL_Q_INITS = ['random', 0,] # a list of q-inits to try
+QL_EPSILONS = [0.1, 0.3, 0.5,] # a list of epsilons to try
 QL_EPSILON_DECAYS = [0.0001,] # a list of epsilon decays to try
+
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 def run_experiment(experiment_details, experiment, timing_key, verbose, timings, max_steps, num_trials, \
