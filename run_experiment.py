@@ -55,16 +55,21 @@ VI_THETA = 0.00001
 QL_THETA = 0.001
 
 # Configure other QL experiment parameters
-QL_EPSILON_DECAYS = [0.00001]
-QL_MIN_SUB_THETAS = 5
 QL_MAX_EPISODES = max(MAX_STEPS['ql'], NUM_TRIALS['ql'], 30000)
 QL_MIN_EPISODES = QL_MAX_EPISODES * 0.01
 QL_MAX_EPISODE_STEPS = 5000
+QL_MIN_SUB_THETAS = 5 # number of consecutive episodes with little change before calling it converged
+QL_DISCOUNTS = [0.0, 0.9, 10] # format: [min_discount, max_discount, num_discounts] # TODO
+QL_ALPHAS = [0.1, 0.5, 0.9,] # a list of alphas to try # TODO
+QL_Q_INITS = ['random', 0,] # a list of q-inits to try # TODO
+QL_EPSILONS = [0.1, 0.3, 0.5,] # a list of epsilons to try # TODO
+QL_EPSILON_DECAYS = [0.0001,] # a list of epsilon decays to try
 
 
 def run_experiment(experiment_details, experiment, timing_key, verbose, timings, max_steps, num_trials, \
                    theta = None, max_episodes = None, min_episodes = None, max_episode_steps = None, \
-                   min_sub_thetas = None, epsilon_decays = None):
+                   min_sub_thetas = None, discounts = None, alphas = None, q_inits = None, epsilons = None, \
+                   epsilon_decays = None):
 
     timings[timing_key] = {}
     for details in experiment_details:
@@ -73,7 +78,8 @@ def run_experiment(experiment_details, experiment, timing_key, verbose, timings,
         if timing_key == 'QL': # QL
             exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials,
                              max_episodes=max_episodes, min_episodes=min_episodes, max_episode_steps=max_episode_steps,
-                             min_sub_thetas=min_sub_thetas, theta=theta, epsilon_decays=epsilon_decays)
+                             min_sub_thetas=min_sub_thetas, theta=theta, discounts=discounts, alphas=alphas,
+                             q_inits=q_inits, epsilons=epsilons, epsilon_decays=epsilon_decays)
         else: # Not QL
             exp = experiment(details, verbose=verbose, max_steps=max_steps, num_trials=num_trials, theta=theta)
         exp.perform()
@@ -163,6 +169,7 @@ if __name__ == '__main__':
         run_experiment(experiment_details, experiments.QLearnerExperiment, 'QL', verbose, timings, MAX_STEPS['ql'], \
                        NUM_TRIALS['ql'], max_episodes=QL_MAX_EPISODES, max_episode_steps=QL_MAX_EPISODE_STEPS, \
                        min_episodes = QL_MIN_EPISODES, min_sub_thetas=QL_MIN_SUB_THETAS, theta=QL_THETA, \
+                       discounts=QL_DISCOUNTS, alphas=QL_ALPHAS, q_inits=QL_Q_INITS, epsilons=QL_EPSILONS, \
                        epsilon_decays=QL_EPSILON_DECAYS)
 
     if args.plot:
