@@ -27,6 +27,11 @@ register(
 )
 
 register(
+    id='RewardingFrozenLake12x12-v0',
+    entry_point='environments:RewardingFrozenLakeEnv',
+)
+
+register(
     id='RewardingFrozenLake15x15-v0',
     entry_point='environments:RewardingFrozenLakeEnv',
 )
