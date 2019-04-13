@@ -11,9 +11,7 @@ import solvers
 # Constants (default values unless provided by caller)
 MAX_STEPS = 2000
 NUM_TRIALS = 100
-DISCOUNT_MIN = 0
-DISCOUNT_MAX = 0.9
-NUM_DISCOUNTS = 10
+DISCOUNTS = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 THETA = 0.0001
 
 
@@ -31,14 +29,12 @@ if not os.path.exists(IMG_DIR):
 class PolicyIterationExperiment(BaseExperiment):
 
     def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS, theta = THETA,
-                 discounts = [DISCOUNT_MIN, DISCOUNT_MAX, NUM_DISCOUNTS]):
+                 discounts = DISCOUNTS):
         super(PolicyIterationExperiment, self).__init__(details, verbose, max_steps)
         self._num_trials = num_trials
         self._max_steps = max_steps
         self._theta = theta
-        self._discount_min = discounts[0]
-        self._discount_max = discounts[1]
-        self._num_discounts = discounts[2]
+        self._discount_factors = discounts
 
     def convergence_check_fn(self, solver, step_count):
         return solver.has_converged()
@@ -52,13 +48,11 @@ class PolicyIterationExperiment(BaseExperiment):
         with open(grid_file_name, 'w') as f:
             f.write("params,time,steps,reward_mean,reward_median,reward_min,reward_max,reward_std\n")
 
-        discount_factors = np.round(np.linspace(self._discount_min, max(self._discount_min, self._discount_max), \
-                                    num = self._num_discounts), 2)
-        dims = len(discount_factors)
+        dims = len(self._discount_factors)
         self.log("Searching PI in {} dimensions".format(dims))
 
         runs = 1
-        for discount_factor in discount_factors:
+        for discount_factor in self._discount_factors:
             t = time.clock()
             self.log("{}/{} Processing PI with discount factor {}".format(runs, dims, discount_factor))
 
