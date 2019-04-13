@@ -178,22 +178,22 @@ if __name__ == '__main__':
             'name': 'frozen_lake',
             'readable_name': 'Frozen Lake (8x8)',
         },
-#        {
-#            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
-#                                                                                  ENV_REWARDS['large_lake']['step_rew'],
-#                                                                                  ENV_REWARDS['large_lake']['hole_rew'],
-#                                                                                  ENV_REWARDS['large_lake']['goal_rew']),
-#            'name': 'large_frozen_lake',
-#            'readable_name': 'Frozen Lake (15x15)',
-#        },
-#        {
-#            'env': environments.get_windy_cliff_walking_4x12_environment(ENV_REWARDS['cliff_walking']['wind_prob'],
-#                                                                         ENV_REWARDS['cliff_walking']['step_rew'],
-#                                                                         ENV_REWARDS['cliff_walking']['fall_rew'],
-#                                                                         ENV_REWARDS['cliff_walking']['goal_rew']),
-#            'name': 'cliff_walking',
-#            'readable_name': 'Cliff Walking (4x12)',
-#        },
+        {
+            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
+                                                                                  ENV_REWARDS['large_lake']['step_rew'],
+                                                                                  ENV_REWARDS['large_lake']['hole_rew'],
+                                                                                  ENV_REWARDS['large_lake']['goal_rew']),
+            'name': 'large_frozen_lake',
+            'readable_name': 'Frozen Lake (15x15)',
+        },
+        {
+            'env': environments.get_windy_cliff_walking_4x12_environment(ENV_REWARDS['cliff_walking']['wind_prob'],
+                                                                         ENV_REWARDS['cliff_walking']['step_rew'],
+                                                                         ENV_REWARDS['cliff_walking']['fall_rew'],
+                                                                         ENV_REWARDS['cliff_walking']['goal_rew']),
+            'name': 'cliff_walking',
+            'readable_name': 'Cliff Walking (4x12)',
+        },
     ]
 
     # Set up experiments
