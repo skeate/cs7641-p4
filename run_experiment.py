@@ -8,58 +8,111 @@ import environments
 import experiments
 from experiments import plotting
 
+# Get parameters from external file (./parameters.py) if provided
+try:
+    import parameters
+    ENV_REWARDS = parameters.ENV_REWARDS
+    MAX_STEPS = parameters.MAX_STEPS
+    NUM_TRIALS = parameters.NUM_TRIALS
+    PI_THETA = parameters.PI_THETA
+    VI_THETA = parameters.VI_THETA
+    QL_THETA = parameters.QL_THETA
+    PI_DISCOUNTS = parameters.PI_DISCOUNTS
+    VI_DISCOUNTS = parameters.VI_DISCOUNTS
+    QL_DISCOUNTS = parameters.QL_DISCOUNTS
+    QL_MAX_EPISODES = parameters.QL_MAX_EPISODES
+    QL_MIN_EPISODES = parameters.QL_MIN_EPISODES
+    QL_MAX_EPISODE_STEPS = parameters.QL_MAX_EPISODE_STEPS
+    QL_MIN_SUB_THETAS = parameters.QL_MIN_SUB_THETAS
+    QL_ALPHAS = parameters.QL_ALPHAS
+    QL_Q_INITS = parameters.QL_Q_INITS
+    QL_EPSILONS = parameters.QL_EPSILONS
+    QL_EPSILON_DECAYS = parameters.QL_EPSILON_DECAYS
+    IMPORTED = True
+except:
+    IMPORTED = False
 
-# Configure rewards per environment
-ENV_REWARDS = {
-               'small_lake':    { 'step_prob': 0.6,
-                                  'step_rew': -0.1,
-                                  'hole_rew': -100,
-                                  'goal_rew': 100,
-                                },
-               'large_lake':    { 'step_prob': 0.8,
-                                  'step_rew': -0.1,
-                                  'hole_rew': -100,
-                                  'goal_rew': 100,
-                                },
-               'cliff_walking': { 'wind_prob': 0.1,
-                                  'step_rew': -1,
-                                  'fall_rew': -100,
-                                  'goal_rew': 100,
-                                },
-              }
 
-# Configure max steps per experiment
-MAX_STEPS = { 'pi': 5000, 
-              'vi': 200,
-              'ql': 20000, 
-            }
+if not IMPORTED:
 
-# Configure trials per experiment
-NUM_TRIALS = { 'pi': 1000,
-               'vi': 100,
-               'ql': 1000,
-             }
+    # THE FOLLOWING CONFIGURATION PARAMETERS MUST ALL BE SET
 
-# Configure thetas per experiment
-PI_THETA = 0.00001
-VI_THETA = 0.00001
-QL_THETA = 0.001
+    # Configure rewards per environment
+    ENV_REWARDS = {
+                   'small_lake':    { 'step_prob': 1.0, # Float
+                                      'step_rew': -0.1, # Float
+                                      'hole_rew': -1, # Float
+                                      'goal_rew': 1, # Float
+                                    },
+                   'large_lake':    { 'step_prob': 1.0, # Float
+                                      'step_rew': -0.1, # Float
+                                      'hole_rew': -1, # Float
+                                      'goal_rew': 1, # Float
+                                    },
+                   'cliff_walking': { 'wind_prob': 1.0, # Float
+                                      'step_rew': -0.1, # Float
+                                      'fall_rew': -1, # Float
+                                      'goal_rew': 1, # Float
+                                    },
+                  }
 
-# Configure discounts per experiment (format: [min_discount, max_discount, num_discounts])
-PI_DISCOUNTS = [0.0, 0.9, 10]
-VI_DISCOUNTS = [0.0, 0.9, 10]
-QL_DISCOUNTS = [0.0, 0.9, 10]
+    # Configure max steps per experiment
+    MAX_STEPS = { 'pi': 100, # Int
+                  'vi': 100, # Int
+                  'ql': 100, # Int
+                }
 
-# Configure other QL experiment parameters
-QL_MAX_EPISODES = max(MAX_STEPS['ql'], NUM_TRIALS['ql'], 30000)
-QL_MIN_EPISODES = QL_MAX_EPISODES * 0.01
-QL_MAX_EPISODE_STEPS = 10000 # maximun steps per episode
-QL_MIN_SUB_THETAS = 5 # num of consecutive episodes with little change before calling it converged
-QL_ALPHAS = [0.1, 0.5, 0.9,] # a list of alphas to try
-QL_Q_INITS = ['random', 0,] # a list of q-inits to try
-QL_EPSILONS = [0.1, 0.3, 0.5,] # a list of epsilons to try
-QL_EPSILON_DECAYS = [0.0001,] # a list of epsilon decays to try
+    # Configure trials per experiment
+    NUM_TRIALS = { 'pi': 100, # Int
+                   'vi': 100, # Int
+                   'ql': None, # Int
+                 }
 
+    # Configure thetas per experiment
+    PI_THETA = 0.00001, # Float
+    VI_THETA = 0.00001, # Float
+    QL_THETA = 0.00001, # Float
+
+    # Configure discounts per experiment (lists of discount values)
+    PI_DISCOUNTS = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] # List of floats
+    VI_DISCOUNTS = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] # List of floats
+    QL_DISCOUNTS = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] # List of floats
+
+    # Configure other QL experiment parameters
+    QL_MAX_EPISODES = 100 # Int
+    QL_MIN_EPISODES = 5 # Int
+    QL_MAX_EPISODE_STEPS = 100 # Int
+    QL_MIN_SUB_THETAS = 5 # (Int) number of consecutive episodes with little change before calling it converged
+    QL_ALPHAS = [0.1, 0.5, 0.9] # List of floats
+    QL_Q_INITS = ['random', 0,] # (the string 'random' or floats) a list of q-inits to try
+    QL_EPSILONS = [0.1, 0.3, 0.5] # List of floats
+    QL_EPSILON_DECAYS = [0.0001] # a list of floats
+
+
+# Check configuration settings (just make sure they've been set to something)
+for env in ENV_REWARDS.keys():
+    for setting in ENV_REWARDS[env].keys():
+        if ENV_REWARDS[env][setting] is None:
+            print(env + ' ' + setting + ' not set!')
+            quit()
+for exp in MAX_STEPS.keys():
+    if MAX_STEPS[exp] is None:
+        print(exp.upper() + ' max steps not set!')
+        quit()
+for exp in NUM_TRIALS.keys():
+    if NUM_TRIALS[exp] is None:
+        print(exp.upper() + ' num trials not set!')
+        quit()
+if PI_THETA is None or VI_THETA is None or QL_THETA is None:
+    print('Not all experiment thetas set!')
+    quit()
+if len(PI_DISCOUNTS) == 0 or len(VI_DISCOUNTS) == 0 or len(QL_DISCOUNTS) == 0:
+    print('Not all experiment discounts set!')
+    quit()
+if QL_MAX_EPISODES is None or QL_MIN_EPISODES is None or QL_MAX_EPISODE_STEPS is None or QL_MIN_SUB_THETAS is None \
+   or len(QL_ALPHAS) == 0 or len(QL_Q_INITS) == 0 or len(QL_EPSILONS) == 0 or len(QL_EPSILON_DECAYS) == 0:
+    print('Not all QL experiment parameters set!')
+    quit()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -117,22 +170,22 @@ if __name__ == '__main__':
 
     # Modify this list of dicts to add/remove/swap environments
     envs = [
-        {
-            'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
-                                                                          ENV_REWARDS['small_lake']['step_rew'],
-                                                                          ENV_REWARDS['small_lake']['hole_rew'],
-                                                                          ENV_REWARDS['small_lake']['goal_rew']),
-            'name': 'frozen_lake',
-            'readable_name': 'Frozen Lake (8x8)',
-        },
-        {
-            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
-                                                                                  ENV_REWARDS['large_lake']['step_rew'],
-                                                                                  ENV_REWARDS['large_lake']['hole_rew'],
-                                                                                  ENV_REWARDS['large_lake']['goal_rew']),
-            'name': 'large_frozen_lake',
-            'readable_name': 'Frozen Lake (15x15)',
-        },
+#        {
+#            'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
+#                                                                          ENV_REWARDS['small_lake']['step_rew'],
+#                                                                          ENV_REWARDS['small_lake']['hole_rew'],
+#                                                                          ENV_REWARDS['small_lake']['goal_rew']),
+#            'name': 'frozen_lake',
+#            'readable_name': 'Frozen Lake (8x8)',
+#        },
+#        {
+#            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
+#                                                                                  ENV_REWARDS['large_lake']['step_rew'],
+#                                                                                  ENV_REWARDS['large_lake']['hole_rew'],
+#                                                                                  ENV_REWARDS['large_lake']['goal_rew']),
+#            'name': 'large_frozen_lake',
+#            'readable_name': 'Frozen Lake (15x15)',
+#        },
         {
             'env': environments.get_windy_cliff_walking_4x12_environment(ENV_REWARDS['cliff_walking']['wind_prob'],
                                                                          ENV_REWARDS['cliff_walking']['step_rew'],
