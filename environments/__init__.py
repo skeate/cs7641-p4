@@ -142,13 +142,13 @@ def get_large_rewarding_no_reward_frozen_lake_20x20_environment(step_prob = LAKE
     return gym.make('RewardingFrozenLakeNoRewards20x20-v0', **kwargs)
 
 
-def get_cliff_walking_4x12_environment(wind_prob = CLIFF_WIND_PROB, step_rew = CLIFF_STEP_REW, \
-                                       fall_rew = CLIFF_FALL_REW, goal_rew = CLIFF_GOAL_REW):
-    kwargs={'wind_prob': 0, 'step_rew': step_rew, 'fall_rew': fall_rew, 'goal_rew': goal_rew}
+def get_cliff_walking_4x12_environment(wind_prob = 0, step_rew = CLIFF_STEP_REW, fall_rew = CLIFF_FALL_REW, goal_rew = CLIFF_GOAL_REW):
+    kwargs={'map_name': '4x12', 'wind_prob': wind_prob, 'step_rew': step_rew, 'fall_rew': fall_rew, 'goal_rew': goal_rew}
     return gym.make('CliffWalking4x12-v0', **kwargs)
 
 
 def get_windy_cliff_walking_4x12_environment(wind_prob = CLIFF_WIND_PROB, step_rew = CLIFF_STEP_REW, \
                                              fall_rew = CLIFF_FALL_REW, goal_rew = CLIFF_GOAL_REW):
-    return gym.make('WindyCliffWalking4x12-v0')
+    kwargs={'map_name': '4x12', 'wind_prob': wind_prob, 'step_rew': step_rew, 'fall_rew': fall_rew, 'goal_rew': goal_rew}
+    return gym.make('WindyCliffWalking4x12-v0', **kwargs)
 
