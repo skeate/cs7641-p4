@@ -6,10 +6,6 @@ import numpy as np
 from abc import ABC, abstractmethod
 
 
-# Constants (default values unless provided by caller)
-MAX_STEPS = 2000
-
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -144,17 +140,18 @@ class BaseSolver(ABC):
                     position = np.unravel_index(s, env.shape)
                     desc = env.desc[position]
                 if desc in b'GH':
-                    continue # terminating state...no "next" actions to evaluate
-                # Look at all possible next actions
-                for a, action_prob in enumerate(policy[s]):
-                    # For each action, look at the possible next states...
-                    for prob, next_state, reward, done in env.P[s][a]:
-                        # Calculate the expected value
-                        if 'nrow' not in env.__dir__() and desc == b'C':
-                            # Cliff Walking cliff position; next state is starting position
-                            v = V[start]
-                            continue
-                        v += action_prob * prob * (reward + discount_factor * V[next_state])
+                    v = 0 # terminating state...no "next" actions to evaluate
+                else:
+                    # Look at all possible next actions
+                    for a, action_prob in enumerate(policy[s]):
+                        # For each action, look at the possible next states...
+                        for prob, next_state, reward, done in env.P[s][a]:
+                            # Calculate the expected value
+                            if 'nrow' not in env.__dir__() and desc == b'C':
+                                # Cliff Walking cliff position; next state is starting position
+                                v = V[start]
+                                continue
+                            v += action_prob * prob * (reward + discount_factor * V[next_state])
                 # How much the value function changed (across any states)
                 delta = max(delta, np.abs(v - V[s]))
                 V[s] = v
@@ -176,7 +173,7 @@ class BaseSolver(ABC):
                 print(directions[policy[row, col]] + ' ', end="")
             print("")
 
-    def run_policy(self, policy, max_steps=MAX_STEPS, render_during=False):
+    def run_policy(self, policy, max_steps=None, render_during=False):
         """
         Run through the given policy. This will reset the solver's environment before running.
 
