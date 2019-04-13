@@ -306,7 +306,7 @@ def find_optimal_params(problem_name, base_dir, file_regex):
         best = df.copy()
         # Attempt to find the best params. First look at the reward mean, then median, then max. If at any point we
         # have more than one result as "best", try the next criterion
-        for criterion in ['reward_mean', 'reward_median', 'reward_max']:
+        for criterion in ['reward_median', 'reward_max', 'reward_mean']:
             best_value = np.max(best[criterion])
             best = best[best[criterion] == best_value]
             if best.shape[0] == 1:
