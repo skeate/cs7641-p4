@@ -65,7 +65,7 @@ if not IMPORTED:
     # Configure trials per experiment
     NUM_TRIALS = { 'pi': 100, # Int
                    'vi': 100, # Int
-                   'ql': None, # Int
+                   'ql': 100, # Int
                  }
 
     # Configure thetas per experiment
