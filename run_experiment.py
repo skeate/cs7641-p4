@@ -69,9 +69,9 @@ if not IMPORTED:
                  }
 
     # Configure thetas per experiment
-    PI_THETA = 0.00001, # Float
-    VI_THETA = 0.00001, # Float
-    QL_THETA = 0.00001, # Float
+    PI_THETA = 0.00001 # Float
+    VI_THETA = 0.00001 # Float
+    QL_THETA = 0.00001 # Float
 
     # Configure discounts per experiment (lists of discount values)
     PI_DISCOUNTS = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] # List of floats
@@ -170,14 +170,14 @@ if __name__ == '__main__':
 
     # Modify this list of dicts to add/remove/swap environments
     envs = [
-#        {
-#            'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
-#                                                                          ENV_REWARDS['small_lake']['step_rew'],
-#                                                                          ENV_REWARDS['small_lake']['hole_rew'],
-#                                                                          ENV_REWARDS['small_lake']['goal_rew']),
-#            'name': 'frozen_lake',
-#            'readable_name': 'Frozen Lake (8x8)',
-#        },
+        {
+            'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
+                                                                          ENV_REWARDS['small_lake']['step_rew'],
+                                                                          ENV_REWARDS['small_lake']['hole_rew'],
+                                                                          ENV_REWARDS['small_lake']['goal_rew']),
+            'name': 'frozen_lake',
+            'readable_name': 'Frozen Lake (8x8)',
+        },
 #        {
 #            'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
 #                                                                                  ENV_REWARDS['large_lake']['step_rew'],
@@ -186,14 +186,14 @@ if __name__ == '__main__':
 #            'name': 'large_frozen_lake',
 #            'readable_name': 'Frozen Lake (15x15)',
 #        },
-        {
-            'env': environments.get_windy_cliff_walking_4x12_environment(ENV_REWARDS['cliff_walking']['wind_prob'],
-                                                                         ENV_REWARDS['cliff_walking']['step_rew'],
-                                                                         ENV_REWARDS['cliff_walking']['fall_rew'],
-                                                                         ENV_REWARDS['cliff_walking']['goal_rew']),
-            'name': 'cliff_walking',
-            'readable_name': 'Cliff Walking (4x12)',
-        }
+#        {
+#            'env': environments.get_windy_cliff_walking_4x12_environment(ENV_REWARDS['cliff_walking']['wind_prob'],
+#                                                                         ENV_REWARDS['cliff_walking']['step_rew'],
+#                                                                         ENV_REWARDS['cliff_walking']['fall_rew'],
+#                                                                         ENV_REWARDS['cliff_walking']['goal_rew']),
+#            'name': 'cliff_walking',
+#            'readable_name': 'Cliff Walking (4x12)',
+#        },
     ]
 
     # Set up experiments
