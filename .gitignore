@@ -12,6 +12,9 @@ manifest.mf
 
 *.java~
 
+# Project parameters
+parameters.py
+
 # Project results
 /output*
 /results
