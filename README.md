@@ -3,6 +3,7 @@
 
 **Contents**
 
+    # Notes
     * Test Environment
     * Dependencies
     * Automated Setup
@@ -10,6 +11,13 @@
     * Execution
     * Test Times
     * Citations
+
+
+**Notes**
+
+    * This code is provided AS IS; it is up to YOU to understand it and ensure it is working as you expect
+    * It is YOUR responsibility to hide any parameters/results you use/obtain from others
+    * Feel free to modify/share the code; make sure the license file stays with it and cite your sources
 
 
 **Test Environment**
