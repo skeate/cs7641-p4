@@ -10,6 +10,15 @@ RIGHT = 1
 DOWN = 2
 LEFT = 3
 
+MAPS = {
+    "4x12": [
+             "RRRRRRRRRRRR",
+             "RRRRRRRRRRRR",
+             "RRRRRRRRRRRR",
+             "SCCCCCCCCCCG",
+            ],
+}
+
 
 # Adapted from https://github.com/openai/gym/blob/master/gym/envs/toy_text/cliffwalking.py
 class WindyCliffWalkingEnv(discrete.DiscreteEnv):
@@ -37,34 +46,51 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
 
     metadata = {'render.modes': ['human', 'ansi']}
 
-    def __init__(self, wind_prob=0.1, step_rew=-1, fall_rew=-100, goal_rew=100):
+    def __init__(self, desc = None, map_name = '4x12', wind_prob=0.1, step_rew=-1, fall_rew=-100, goal_rew=100):
 
-        self.shape = (4, 12)
-        self.start_state_index = np.ravel_multi_index((3, 0), self.shape)
+        self.map_name = map_name
+        if desc is None and self.map_name is None:
+            raise ValueError('Must provide either desc or map_name')
+        elif desc is None:
+            desc = MAPS[self.map_name]
+        self.desc = desc = np.asarray(desc, dtype='c')
+        self.shape = (len(self.desc), len(self.desc[1]))
         self.wind_prob = wind_prob
         self.step_rew = step_rew
         self.fall_rew = fall_rew
         self.goal_rew = goal_rew
 
-        self.desc = np.asarray([
-            "RRRRRRRRRRRR",
-            "RRRRRRRRRRRR",
-            "RRRRRRRRRRRR",
-            "SCCCCCCCCCCG",
-        ], dtype='c')
-
         nS = np.prod(self.shape)
         nA = 4
 
         # Adapted from https://github.com/dennybritz/reinforcement-learning/blob/master/lib/envs/windy_gridworld.py
-        # Wind strength
+        # Wind probabilities & strengths
         winds = np.zeros(self.shape)
-        winds[:, [3, 4, 5, 8]] = 1 * np.random.uniform(0.0, 1.0)
-        winds[:, [6, 7]] = 2 * np.random.uniform(0.0, 1.0)
+        # Winds that move the agend down 1 position
+        winds[:, [3, 4, 5, 8]] = 1 * (np.random.uniform(0.0, 1.0) <= min(self.wind_prob, 1.0))
+        # Winds that move the agend down 2 positions
+        winds[:, [6, 7]] = 2 * (np.random.uniform(0.0, 1.0) <= min(self.wind_prob, 1.0))
+
+        # Start Location
+        self._start_state_index = 0
+        for s in range(nS):
+            position = np.unravel_index(s, self.shape)
+            if self.desc[position] == b'S':
+                self._start_state_index = np.ravel_multi_index(position, self.shape)
 
         # Cliff Location
         self._cliff = np.zeros(self.shape, dtype=np.bool)
-        self._cliff[3, 1:-1] = True
+        for s in range(nS):
+            position = np.unravel_index(s, self.shape)
+            if self.desc[position] == b'C':
+                self._cliff[position] = True
+
+        # Terminal States
+        self._terminal_state = np.zeros(self.shape, dtype=np.bool)
+        for s in range(nS):
+            position = np.unravel_index(s, self.shape)
+            if self.desc[position] == b'G':
+                self._terminal_state[position] = True
 
         # Calculate transition probabilities and rewards
         P = {}
@@ -77,9 +103,8 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
             P[s][LEFT] = self._calculate_transition_prob(position, [0, -1], winds)
 
         # Calculate initial state distribution
-        # We always start in state (3, 0)
         isd = np.zeros(nS)
-        isd[self.start_state_index] = 1.0
+        isd[self._start_state_index] = 1.0
 
         super(WindyCliffWalkingEnv, self).__init__(nS, nA, P, isd)
 
@@ -104,24 +129,23 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         :return: (1.0, new_state, reward, done)
         """
 
-        # # IF the wind is blowing, move the agent down
-        # wind_blows = np.random.uniform(0.0, 1.0) <= self.wind_prob
-        # if wind_blows:
-        #     new_position = np.array(current) + np.array([1, 0])
-        # else:
-        #     new_position = np.array(current) + np.array(delta)
-
+        # Get the new position
         new_position = np.array(current) + np.array(delta) + (np.array([1, 0]) * winds[tuple(current)])
         new_position = self._limit_coordinates(new_position).astype(int)
-        new_state = np.ravel_multi_index(tuple(new_position), self.shape)
-        if self._cliff[tuple(new_position)]:
-            return [(1.0, self.start_state_index, self.fall_rew, False)]
 
-        terminal_state = (self.shape[0] - 1, self.shape[1] - 1)
-        is_done = tuple(new_position) == terminal_state
-        if is_done:
-            return [(1.0, new_state, self.goal_rew, is_done)]
-        return [(1.0, new_state, self.step_rew, is_done)]
+        # Get the new state
+        new_state = np.ravel_multi_index(tuple(new_position), self.shape)
+
+        # Check if new position is a terminal state
+        if self._terminal_state[new_position[0], new_position[1]]:
+            return [(1.0, new_state, self.goal_rew, True)]
+
+        # Check if new position is a cliff position; if so, the agent is moved to the start state
+        if self._cliff[tuple(new_position)]:
+            return [(1.0, self._start_state_index, self.fall_rew, False)]
+
+        # Not a terminal state or a cliff position
+        return [(1.0, new_state, self.step_rew, False)]
 
     def render(self, mode='human'):
 
@@ -160,5 +184,6 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         }
 
     def new_instance(self):
-        return WindyCliffWalkingEnv(wind_prob=self.wind_prob, step_rew=self.step_rew, fall_rew=self.fall_rew, goal_rew=self.goal_rew)
+        return WindyCliffWalkingEnv(desc=self.desc, map_name=self.map_name, wind_prob=self.wind_prob, \
+                                    step_rew=self.step_rew, fall_rew=self.fall_rew, goal_rew=self.goal_rew)
 
