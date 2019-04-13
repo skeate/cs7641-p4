@@ -162,37 +162,34 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
                 for a in range(4):
                     li = P[s][a]
                     letter = desc[row, col]
-                    if letter in b'G':
-                        li.append((1.0, s, self.goal_reward, True))
-                    else:
-                        if is_slippery:
-                            for b in [(a - 1) % 4, a, (a + 1) % 4]:
-                                newrow, newcol = inc(row, col, b)
-                                newstate = to_s(newrow, newcol)
-                                newletter = desc[newrow, newcol]
-                                done = bytes(newletter) in b'GH'
-                                rew = float(newletter == b'G')
-                                if self.rewarding:
-                                    if newletter in b'FS':
-                                        rew = self.step_reward
-                                    elif newletter == b'H':
-                                        rew = self.hole_reward
-                                if b == a:
-                                    li.append((self.step_prob, newstate, rew, done))
-                                else:
-                                    li.append((self.slip_prob, newstate, rew, done))
-                        else:
-                            newrow, newcol = inc(row, col, a)
+                    if is_slippery:
+                        for b in [(a - 1) % 4, a, (a + 1) % 4]:
+                            newrow, newcol = inc(row, col, b)
                             newstate = to_s(newrow, newcol)
                             newletter = desc[newrow, newcol]
                             done = bytes(newletter) in b'GH'
-                            rew = float(newletter == b'G')
+                            rew = self.goal_reward * float(newletter == b'G')
                             if self.rewarding:
                                 if newletter in b'FS':
                                     rew = self.step_reward
                                 elif newletter == b'H':
                                     rew = self.hole_reward
-                            li.append((1.0, newstate, rew, done))
+                            if b == a:
+                                li.append((self.step_prob, newstate, rew, done))
+                            else:
+                                li.append((self.slip_prob, newstate, rew, done))
+                    else:
+                        newrow, newcol = inc(row, col, a)
+                        newstate = to_s(newrow, newcol)
+                        newletter = desc[newrow, newcol]
+                        done = bytes(newletter) in b'GH'
+                        rew = self.goal_reward * float(newletter == b'G')
+                        if self.rewarding:
+                            if newletter in b'FS':
+                                rew = self.step_reward
+                            elif newletter == b'H':
+                                rew = self.hole_reward
+                        li.append((1.0, newstate, rew, done))
 
         super(RewardingFrozenLakeEnv, self).__init__(nS, nA, P, isd)
 
@@ -233,6 +230,7 @@ class RewardingFrozenLakeEnv(discrete.DiscreteEnv):
         }
 
     def new_instance(self):
-        return RewardingFrozenLakeEnv(desc=self.desc, rewarding=self.rewarding, step_rew=self.step_reward,
-                                      hole_rew=self.hole_reward, goal_rew=self.goal_reward, is_slippery=self.is_slippery)
+        return RewardingFrozenLakeEnv(desc=self.desc, rewarding=self.rewarding, step_rew=self.step_reward, \
+                                      hole_rew=self.hole_reward, goal_rew=self.goal_reward, is_slippery=self.is_slippery, \
+                                      step_prob=self.step_prob)
 
