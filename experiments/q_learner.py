@@ -18,9 +18,7 @@ ALPHAS = [0.1, 0.5, 0.9]
 Q_INITS = ['random', 0]
 EPSILONS = [0.1, 0.3, 0.5]
 EPS_DECAYS = [0.0001]
-DISCOUNT_MIN = 0
-DISCOUNT_MAX = 0.9
-NUM_DISCOUNTS = 10
+DISCOUNTS = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 MIN_SUB_THETAS = 5
 THETA = 0.0001
 
@@ -40,7 +38,7 @@ class QLearnerExperiment(BaseExperiment):
 
     def __init__(self, details, verbose=False, max_steps = MAX_STEPS, num_trials = NUM_TRIALS,
                  max_episodes = MAX_EPISODES, min_episodes = MIN_EPISODES, max_episode_steps = MAX_EPISODE_STEPS, 
-                 min_sub_thetas = MIN_SUB_THETAS, theta = THETA, discounts = [DISCOUNT_MIN, DISCOUNT_MAX, NUM_DISCOUNTS],
+                 min_sub_thetas = MIN_SUB_THETAS, theta = THETA, discounts = DISCOUNTS,
                  alphas = ALPHAS, q_inits = Q_INITS, epsilons = EPSILONS, epsilon_decays = EPS_DECAYS):
         self._max_episodes = max_episodes
         self._max_episode_steps = max_episode_steps
@@ -49,9 +47,7 @@ class QLearnerExperiment(BaseExperiment):
         self._min_sub_thetas = min_sub_thetas
         self._theta = theta
         self._epsilon_decays = epsilon_decays
-        self._discount_min = discounts[0]
-        self._discount_max = discounts[1]
-        self._num_discounts = discounts[2]
+        self._discount_factors = discounts
         self._alphas = alphas
         self._q_inits = q_inits
         self._epsilons = epsilons
@@ -72,9 +68,7 @@ class QLearnerExperiment(BaseExperiment):
         with open(grid_file_name, 'w') as f:
             f.write("params,time,steps,reward_mean,reward_median,reward_min,reward_max,reward_std\n")
 
-        discount_factors = np.round(np.linspace(self._discount_min, max(self._discount_min, self._discount_max), \
-                                    num = self._num_discounts), 2)
-        dims = len(discount_factors) * len(self._alphas) * len(self._q_inits) * len(self._epsilons) * len(self._epsilon_decays)
+        dims = len(self._discount_factors) * len(self._alphas) * len(self._q_inits) * len(self._epsilons) * len(self._epsilon_decays)
         self.log("Searching Q in {} dimensions".format(dims))
 
         runs = 1
@@ -82,7 +76,7 @@ class QLearnerExperiment(BaseExperiment):
             for q_init in self._q_inits:
                 for epsilon in self._epsilons:
                     for epsilon_decay in self._epsilon_decays:
-                        for discount_factor in discount_factors:
+                        for discount_factor in self._discount_factors:
                             t = time.clock()
                             self.log("{}/{} Processing QL with alpha {}, q_init {}, epsilon {}, epsilon_decay {},"
                                      " discount_factor {}".format(
