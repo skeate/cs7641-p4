@@ -170,14 +170,14 @@ if __name__ == '__main__':
 
     # Modify this list of dicts to add/remove/swap environments
     envs = [
-        {
-            'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
-                                                                          ENV_REWARDS['small_lake']['step_rew'],
-                                                                          ENV_REWARDS['small_lake']['hole_rew'],
-                                                                          ENV_REWARDS['small_lake']['goal_rew']),
-            'name': 'frozen_lake',
-            'readable_name': 'Frozen Lake (8x8)',
-        },
+        # {
+        #     'env': environments.get_rewarding_frozen_lake_8x8_environment(ENV_REWARDS['small_lake']['step_prob'],
+        #                                                                   ENV_REWARDS['small_lake']['step_rew'],
+        #                                                                   ENV_REWARDS['small_lake']['hole_rew'],
+        #                                                                   ENV_REWARDS['small_lake']['goal_rew']),
+        #     'name': 'frozen_lake',
+        #     'readable_name': 'Frozen Lake (8x8)',
+        # },
         {
             'env': environments.get_large_rewarding_frozen_lake_15x15_environment(ENV_REWARDS['large_lake']['step_prob'],
                                                                                   ENV_REWARDS['large_lake']['step_rew'],
