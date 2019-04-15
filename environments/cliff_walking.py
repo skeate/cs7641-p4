@@ -12,9 +12,9 @@ LEFT = 3
 
 MAPS = {
     "4x12": [
-             "RRRRRRRRRRRR",
-             "RRRRRRRRRRRR",
-             "RRRRRRRRRRRR",
+             "RRRWWWVVWRRR",
+             "RRRWWWVVWRRR",
+             "RRRWWWVVWRRR",
              "SCCCCCCCCCCG",
             ],
 }
@@ -67,9 +67,9 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         # Wind probabilities & strengths
         winds = np.zeros(self.shape)
         # Winds that move the agend down 1 position
-        winds[:, [3, 4, 5, 8]] = 1 * (np.random.uniform(0.0, 1.0) <= min(self.wind_prob, 1.0))
+        winds[:, [3, 4, 5, 8]] = 1
         # Winds that move the agend down 2 positions
-        winds[:, [6, 7]] = 2 * (np.random.uniform(0.0, 1.0) <= min(self.wind_prob, 1.0))
+        winds[:, [6, 7]] = 2
 
         # Start Location
         self._start_state_index = 0
@@ -130,22 +130,41 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
         """
 
         # Get the new position
-        new_position = np.array(current) + np.array(delta) + (np.array([1, 0]) * winds[tuple(current)])
+        new_position = np.array(current) + np.array(delta)
         new_position = self._limit_coordinates(new_position).astype(int)
+
+        pushed_position = np.array(current) + np.array(delta) + (np.array([1, 0]) * winds[tuple(current)])
+        pushed_position = self._limit_coordinates(pushed_position).astype(int)
 
         # Get the new state
         new_state = np.ravel_multi_index(tuple(new_position), self.shape)
-
+        new_done = False
+        new_rew = self.step_rew
         # Check if new position is a terminal state
         if self._terminal_state[new_position[0], new_position[1]]:
-            return [(1.0, new_state, self.goal_rew, True)]
-
+            new_rew = self.goal_rew
+            new_done = True
         # Check if new position is a cliff position; if so, the agent is moved to the start state
         if self._cliff[tuple(new_position)]:
-            return [(1.0, self._start_state_index, self.fall_rew, False)]
+            new_rew = self.fall_rew
+            new_state = self._start_state_index
 
-        # Not a terminal state or a cliff position
-        return [(1.0, new_state, self.step_rew, False)]
+        pushed_state = np.ravel_multi_index(tuple(pushed_position), self.shape)
+        pushed_done = False
+        pushed_rew = self.step_rew
+        # Check if pushed position is a terminal state
+        if self._terminal_state[pushed_position[0], pushed_position[1]]:
+            pushed_rew = self.goal_rew
+            pushed_done = True
+        # Check if pushed position is a cliff position; if so, the agent is moved to the start state
+        if self._cliff[tuple(pushed_position)]:
+            pushed_rew = self.fall_rew
+            pushed_state = self._start_state_index
+
+        return [
+            (1 - self.wind_prob, new_state, new_rew, new_done),
+            (self.wind_prob, pushed_state, pushed_rew, pushed_done),
+            ]
 
     def render(self, mode='human'):
 
@@ -168,7 +187,9 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
 
         return {
             b'S': 'black',
-            b'R': 'blue',
+            b'R': 'beige',
+            b'W': 'yellow',
+            b'V': 'orange',
             b'C': 'darkred',
             b'G': 'green',
         }
@@ -186,4 +207,3 @@ class WindyCliffWalkingEnv(discrete.DiscreteEnv):
     def new_instance(self):
         return WindyCliffWalkingEnv(desc=self.desc, map_name=self.map_name, wind_prob=self.wind_prob, \
                                     step_rew=self.step_rew, fall_rew=self.fall_rew, goal_rew=self.goal_rew)
-
